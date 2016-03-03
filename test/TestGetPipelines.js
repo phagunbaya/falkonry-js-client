@@ -14,13 +14,13 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var token    = 'W5xy4h6stbg9zf'; //auth token
+var token    = ''; //auth token
 
 /*
  * Test to get Pipelines for an account
  */
 
-describe('Test fetch Pipelines', function(){
+describe.skip('Test fetch Pipelines', function(){
   var falkonry = null;
   var pipelines = [];
 

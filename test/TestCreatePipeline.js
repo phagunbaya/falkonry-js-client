@@ -14,7 +14,7 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var token    = 'W5xy4h6stbg9zf'; //auth token
+var token    = ''; //auth token
 
 /*
  * Test to create Pipeline for following cases :
@@ -24,7 +24,7 @@ var token    = 'W5xy4h6stbg9zf'; //auth token
  *  4. Pipeline with multiple assessment
  */
 
-describe('Test Pipeline Creation', function(){
+describe.skip('Test Pipeline Creation', function(){
   var falkonry = null;
   var pipelines = [];
 
