@@ -1,0 +1,9 @@
+# Intellij Files
+*.iml
+.idea
+
+#node_modules
+node_modules
+
+#test reports
+test/reports
