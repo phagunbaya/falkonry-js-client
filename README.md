@@ -22,19 +22,21 @@ $ npm install falkonry-js-client
 
     * To create Pipeline
     
-```
+```js
 var Falkonry   = require('falkonry-js-client').Client;
 var Schemas    = require('falkonry-js-client').Schemas;
-var falkonry   = new Falkonry("https://service.falkonry.io", "auth-token");
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
-var assessment = Schemas.Assessment();
-                        .setName("Health")
-                        .addSignals(["current", "vibration"]);
+var assessment = new Schemas.Assessment();
+                        .setName('Health')
+                        .addSignals(['current', 'vibration']);
                         
-var pipeline   = Schemas.Pipeline()
-                        .setName("Motor Health")
-                        .setThingName("Motor")
-                        .setSignals({"current" : "NUMERIC", "vibration" : "NUMERIC"})
+var pipeline   = new Schemas.Pipeline()
+                        .setName('Motor Health')
+                        .setThingName('Motor')
+                        .setTimeIdentifier('time')
+                        .setTimeFormat('YYYY-MM-DD HH:MM:SS')
+                        .setInputSignals({'current' : 'Numeric', 'vibration' : 'Numeric'})
                         .addAssessment(assessment);
         
 falkonry.createPipeline(pipeline, function(error, pipeline){});
@@ -42,75 +44,59 @@ falkonry.createPipeline(pipeline, function(error, pipeline){});
 
     * To get all Pipelines
     
-```
+```js
 var Falkonry   = require('falkonry-js-client').Client;
-var falkonry   = new Falkonry("https://service.falkonry.io", "auth-token");
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
         
 falkonry.getPipelines(function(error, pipelines){});
 ```
 
-    * To add csv data
-
-```
-var Falkonry = require('falkonry-js-client').Client;
-var falkonry = new Falkonry("https://service.falkonry.io", "auth-token");
-var data     = 'time, current, vibration\n' +
-               '1456528122024, 3.86, 4.2\n' +
-               '1456528132024, 4.456, 6.8\n' +
-               '1456528142024, 2.4690, 9.3\n';
-               
-falkonry.addInput("pipeline_id", data, function(error, response){});
-```
-
-    * To add json data
+    * To add data
     
-```
+```js
 var Falkonry   = require('falkonry-js-client').Client;
-var falkonry   = new Falkonry("https://service.falkonry.io", "auth-token");
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 var data       = [
     {
-        "time"      : 1456528122024,
-        "current"   : 3.86,
-        "vibration" : 4.2
+        'time'      : 1456528122024,
+        'current'   : 3.86,
+        'vibration' : 4.2
     },
     {
-        "time"      : 1456528132024,
-        "current"   : 4.456,
-        "vibration" : 6.8
+        'time'      : 1456528132024,
+        'current'   : 4.456,
+        'vibration' : 6.8
     },
     {
-        "time"      : 1456528142024,
-        "current"   : 2.4690,
-        "vibration" : 9.3
+        'time'      : 1456528142024,
+        'current'   : 2.4690,
+        'vibration' : 9.3
     }
 ];
-falkonry.addInput("pipeline_id", data, function(error, response){});
+falkonry.addInput('pipeline_id', data, function(error, response){});
 ```
 
-    * To add data as csv stream
+    * To add data from a stream
     
-```
+```js
 var Falkonry = require('falkonry-js-client').Client;
-var falkonry = new Falkonry("https://service.falkonry.io", "auth-token");
-var stream   = fs.createReadStream("/tmp/sample.csv");
+var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
+var stream   = fs.createReadStream('/tmp/sample.json');
 
-var streamHandler = falkonry.addInputAsCsvStream("pipeline_id", stream);
-streamHandler.on('error', function(error){});
-streamHandler.on('success', function(stats){});
-streamHandler.startStreaming();
+var streamHandler = falkonry.addInputFromStream('pipeline_id', stream, function(error, response){});
 ```
 
-    * To add data as json stream
+    * To get output of a Pipeline
     
-```
+```js
 var Falkonry = require('falkonry-js-client').Client;
-var falkonry = new Falkonry("https://service.falkonry.io", "auth-token");
-var stream   = fs.createReadStream("/tmp/sample_stream.json");
-
-var streamHandler = falkonry.addInputAsJsonStream("pipeline_id", stream);
-streamHandler.on('error', function(error){});
-streamHandler.on('success', function(stats){});
-streamHandler.startStreaming();
+var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
+var stream   = fs.createReadStream('/tmp/sample.json');
+var startTime = '1457018017'; //seconds since unix epoch 
+var endTime   = '1457028017'; //seconds since unix epoch
+var streamHandler = falkonry.getOutput('pipeline_id', startTime, endTime, function(error, stream){
+    stream.pipe(fs.createWriteStream('/tmp/pipeline_output.json'));
+});
 ```
 
 ## Docs
