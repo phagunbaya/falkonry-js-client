@@ -15,8 +15,8 @@ $ npm install falkonry-js-client
 
     * Create Pipeline
     * Retrieve Pipelines
-    * Add data to Pipeline (csv, json, stream)
-    * Retrieve output of Pipeline (csv, json, stream)
+    * Add data to Pipeline (json, stream)
+    * Retrieve output of Pipeline (json, stream)
     
 ## Quick Start
 
