@@ -40,16 +40,18 @@ describe.skip('Test get output of a Pipeline', function(){
     });
   });
 
-  it.skip('Should get output within the specified range', function(done){
+  it('Should get output within the specified range', function(done){
     var start = 0;
-    var end   = 0;
-    return falkonry.getOutput(pipeline, start, end, function(error, response){
+    //var end   = 0;
+    return falkonry.getOutput(pipeline, start, null, function(error, response){
       assert.equal(error, null, 'Error getting output of a Pipeline: '+error);
 
       if(!error) {
         response.pipe(fs.createWriteStream('/tmp/'+pipeline+'.json'));
+        response.on('end', function(){
+          return done();
+        });
       }
-      return done();
     });
   });
 
