@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - 0.10
+sudo: false
+
+after_script: npm test
+
+webhooks:
+  urls: https://webhooks.gitter.im/e/796eea6481c1e915aa27
+  on_success: change
+  on_failure: always
+  on_start: false
