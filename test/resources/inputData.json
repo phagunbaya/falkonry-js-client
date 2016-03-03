@@ -1,0 +1,6 @@
+{'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'}
+{'time' :'2016-03-01 01:01:02', 'current' : 11.3, 'vibration' : 2.2, 'state' : 'On'}
+{'time' :'2016-03-01 01:01:03', 'current' : 10.5, 'vibration' : 3.8, 'state' : 'On'}
+{'time' :'2016-03-01 01:02:03', 'current' : 19.2, 'vibration' : 3.8, 'state' : 'On'}
+{'time' :'2016-03-01 01:02:03', 'current' : 1.2, 'vibration' : 0.8, 'state' : 'Off'}
+{'time' :'2016-03-01 01:02:05', 'current' : 0.2, 'vibration' : 0.3, 'state' : 'Off'}

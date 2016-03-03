@@ -52,16 +52,12 @@ describe('Test add input data stream to Pipeline', function(){
 
       if(!error) {
         pipelines.push(response);
-        var data = [
-          {'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'},
-          {'time' :'2016-03-01 01:01:02', 'current' : 11.3, 'vibration' : 2.2, 'state' : 'On'},
-          {'time' :'2016-03-01 01:01:03', 'current' : 10.5, 'vibration' : 3.8, 'state' : 'On'}
-        ];
-        return falkonry.addInput(response.getId(), data, function(error, response){
+        var data = fs.createReadStream('./resources/inputData.json');
+        return falkonry.addInputFromStream(response.getId(), data, function(error, response){
           assert.equal(error, null, 'Error adding input data to Pipeline: '+error);
 
           if(!error) {
-            assert.equal(typeof response.__$id, 'string', 'Cannot add input data to Pipeline');
+            assert.equal(typeof response.__$id, 'string', 'Cannot add input data stream to Pipeline');
           }
           return done();
         });
@@ -79,7 +75,7 @@ describe('Test add input data stream to Pipeline', function(){
         return function(_cb) {
           return falkonry.deletePipeline(pipeline.getId(), function(error, response){
             if(error)
-              console.log('TestAddData', 'Error deleting pipeline - '+pipeline.getId());
+              console.log('TestAddDataStream', 'Error deleting pipeline - '+pipeline.getId());
             return _cb(null, null);
           });
         }
