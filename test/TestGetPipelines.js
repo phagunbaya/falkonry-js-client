@@ -14,7 +14,7 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var token    = "W5xy4h6stbg9zf"; //auth token
+var token    = 'W5xy4h6stbg9zf'; //auth token
 
 /*
  * Test to get Pipelines for an account
@@ -25,38 +25,38 @@ describe('Test fetch Pipelines', function(){
   var pipelines = [];
 
   before(function(done){
-    falkonry = new Falkonry("https://dev.falkonry.io", token);
+    falkonry = new Falkonry('https://dev.falkonry.io', token);
     return done();
   });
 
   it('Pipeline for single thing', function(done){
     var pipeline = new Schemas.Pipeline();
     var signals  = {
-      "current"   : "Numeric",
-      "vibration" : "Numeric",
-      "state"     : "Categorical"
+      'current'   : 'Numeric',
+      'vibration' : 'Numeric',
+      'state'     : 'Categorical'
     };
     var assessment = new Schemas.Assessment();
-    assessment.setName("Health")
-        .setInputSignals(["current", "vibration", "state"]);
+    assessment.setName('Health')
+        .setInputSignals(['current', 'vibration', 'state']);
 
-    pipeline.setName("Motor Health")
-        .setTimeIdentifier("time")
-        .setTimeFormat("YYYY-MM-DD HH:MM:SS")
+    pipeline.setName('Motor Health')
+        .setTimeIdentifier('time')
+        .setTimeFormat('YYYY-MM-DD HH:MM:SS')
         .setInputSignals(signals)
-        .setThingName("Motor")
+        .setThingName('Motor')
         .setAssessment(assessment);
 
     return falkonry.createPipeline(pipeline, function(error, response){
-      assert.equal(error, null, "Error creating Pipeline");
+      assert.equal(error, null, 'Error creating Pipeline');
 
       if(!error) {
         pipelines.push(response);
         return falkonry.getPipelines(function(error, response){
-          assert.equal(error, null, "Error fetching Pipelines");
+          assert.equal(error, null, 'Error fetching Pipelines');
 
           if(!error) {
-            assert.equal(response.length > 0, true, "Cannot fetch Pipelines");
+            assert.equal(response.length > 0, true, 'Cannot fetch Pipelines');
           }
           return done();
         });
@@ -74,7 +74,7 @@ describe('Test fetch Pipelines', function(){
         return function(_cb) {
           return falkonry.deletePipeline(pipeline.getId(), function(error, response){
             if(error)
-              console.log("TestGetPipelines", "Error deleting pipeline - "+pipeline.getId());
+              console.log('TestGetPipelines', 'Error deleting pipeline - '+pipeline.getId());
             return _cb(null, null);
           });
         }
