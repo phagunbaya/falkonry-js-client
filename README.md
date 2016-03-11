@@ -3,7 +3,7 @@
 [![npm package](https://nodei.co/npm/falkonry-js-client.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/falkonry-js-client/)
 [![Build status](https://img.shields.io/travis/Falkonry/falkonry-js-client.svg?style=flat-square)](https://travis-ci.org/Falkonry/falkonry-js-client)
 
-Falkonry Javascript Client to access Condition Prediction APIs
+Falkonry Javascript Client to access [Falkonry Condition Prediction](falkonry.com) APIs
 
 ## Installation
 
@@ -114,4 +114,4 @@ $ npm test
 
 ## License
 
-  [MIT](LICENSE)
+  Available under [MIT License(LICENSE)
