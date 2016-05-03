@@ -27,9 +27,9 @@ var Falkonry   = require('falkonry-js-client').Client;
 var Schemas    = require('falkonry-js-client').Schemas;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
-var assessment = new Schemas.Assessment();
+var assessment = new Schemas.Assessment()
                         .setName('Health')
-                        .addSignals(['current', 'vibration']);
+                        .setInputSignals(['current', 'vibration']);
                         
 var pipeline   = new Schemas.Pipeline()
                         .setName('Motor Health')
