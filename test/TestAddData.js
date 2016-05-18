@@ -14,51 +14,39 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var token    = ''; //auth token
+var host     = 'http://localhost:8080';
+var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
 
 /*
- * Test to add data to a Pipeline
+ * Test to add data to a Eventbuffer
  */
 
-describe.skip('Test add input data to Pipeline', function(){
+describe.skip('Test add input data to Eventbuffer', function(){
   var falkonry = null;
-  var pipelines = [];
+  var eventbuffers = [];
 
   before(function(done){
-    falkonry = new Falkonry('http://localhost:8080', token);
+    falkonry = new Falkonry(host, token);
     return done();
   });
 
-  it('Should add json input data for single thing', function(done){
-    var pipeline = new Schemas.Pipeline();
-    var signals  = {
-      'current'   : 'Numeric',
-      'vibration' : 'Numeric',
-      'state'     : 'Categorical'
+  it('Should add json input data', function(done){
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'iso_8601'
     };
-    var assessment = new Schemas.Assessment();
-    assessment.setName('Health')
-        .setInputSignals(['current', 'vibration', 'state']);
 
-    pipeline.setName('Motor Health')
-        .setTimeIdentifier('time')
-        .setTimeFormat('YYYY-MM-DD HH:MM:SS')
-        .setInputSignals(signals)
-        .setThingName('Motor')
-        .setAssessment(assessment);
-
-    return falkonry.createPipeline(pipeline, function(error, response){
-      assert.equal(error, null, 'Error creating Pipeline: '+error);
+    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
-        pipelines.push(response);
-        var data = [
-          {'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'},
-          {'time' :'2016-03-01 01:01:02', 'current' : 11.3, 'vibration' : 2.2, 'state' : 'On'},
-          {'time' :'2016-03-01 01:01:03', 'current' : 10.5, 'vibration' : 3.8, 'state' : 'On'}
-        ];
-        return falkonry.addInput(response.getId(), data, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Pipeline: '+error);
+        eventbuffers.push(response);
+        var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+        return falkonry.addInput(response.getId(), 'json', data, function(error, response){
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
           if(!error) {
             assert.equal(typeof response.__$id, 'string', 'Cannot add input data to Pipeline');
@@ -75,17 +63,17 @@ describe.skip('Test add input data to Pipeline', function(){
   after(function(done){
     return async.series(function(){
       var tasks = [];
-      var fn = function(pipeline){
+      var fn = function(eventbuffer){
         return function(_cb) {
-          return falkonry.deletePipeline(pipeline.getId(), function(error, response){
+          return falkonry.deleteEventbuffer(eventbuffer.getId(), function(error, response){
             if(error)
-              console.log('TestAddData', 'Error deleting pipeline - '+pipeline.getId());
+              console.log('TestAddData', 'Error deleting eventbuffer - '+eventbuffer.getId());
             return _cb(null, null);
           });
         }
       };
-      pipelines.forEach(function(eachPipeline){
-        tasks.push(fn(eachPipeline));
+      eventbuffers.forEach(function(eachEventBuffer){
+        tasks.push(fn(eachEventBuffer));
       });
       return tasks;
     }(), function(e, r){
