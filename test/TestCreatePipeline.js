@@ -14,7 +14,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var token    = ''; //auth token
+var host     = 'http://localhost:8080';
+var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
 
 /*
  * Test to create Pipeline for following cases :
@@ -26,113 +27,177 @@ var token    = ''; //auth token
 
 describe.skip('Test Pipeline Creation', function(){
   var falkonry = null;
+  var eventbuffers = [];
   var pipelines = [];
 
   before(function(done){
-    falkonry = new Falkonry('https://dev.falkonry.io', token);
+    falkonry = new Falkonry(host, token);
     return done();
   });
 
   it('Should create Pipeline for single thing', function(done){
-    var pipeline = new Schemas.Pipeline();
-    var signals  = {
-      'current'   : 'Numeric',
-      'vibration' : 'Numeric',
-      'state'     : 'Categorical'
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'iso_8601'
     };
-    var assessment = new Schemas.Assessment();
-    assessment.setName('Health')
-        .setInputSignals(['current', 'vibration', 'state']);
 
-    pipeline.setName('Motor Health 1')
-        .setTimeIdentifier('time')
-        .setTimeFormat('YYYY-MM-DD HH:MM:SS')
-        .setInputSignals(signals)
-        .setThingName('Motor')
-        .setAssessment(assessment);
-
-    return falkonry.createPipeline(pipeline, function(error, response){
-      assert.equal(error, null, 'Error creating Pipeline');
+    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
-        pipelines.push(response);
-        assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
-        assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
-        assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
-        assert.notEqual(response.getThingName(), null, 'Invalid Pipeline object after creation');
-        assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
-        assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
+        eventbuffers.push(response);
+
+        var pipeline = new Schemas.Pipeline();
+        var signals  = {
+          'current'   : 'Numeric',
+          'vibration' : 'Numeric',
+          'state'     : 'Categorical'
+        };
+        var assessment = new Schemas.Assessment();
+        assessment.setName('Health')
+            .setInputSignals(['current', 'vibration', 'state']);
+
+        pipeline.setName('Pipeline-'+Math.random())
+            .setEventbuffer(response.getId())
+            .setInputSignals(signals)
+            .setThingName('Motor')
+            .setAssessment(assessment);
+
+        return falkonry.createPipeline(pipeline, function(error, response){
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+          if(!error) {
+            pipelines.push(response);
+            assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
+            assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
+            assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getThingName(), pipeline.getThingName(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
+            assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
+          }
+          return done();
+        });
       }
-      return done();
+      else {
+        return done();
+      }
     });
   });
 
   it('Should create Pipeline for multiple thing', function(done){
-    var pipeline = new Schemas.Pipeline();
-    var signals  = {
-      'current'   : 'Numeric',
-      'vibration' : 'Numeric',
-      'state'     : 'Categorical'
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'iso_8601'
     };
-    var assessment = new Schemas.Assessment;
-    assessment.setName('Health')
-        .setInputSignals(['current', 'vibration', 'state']);
 
-    pipeline.setName('Motor Health 2')
-        .setInputSignals(signals)
-        .setThingIdentifier('motors')
-        .setAssessment(assessment);
-
-    return falkonry.createPipeline(pipeline, function(error, response){
-      assert.equal(error, null, 'Error creating Pipeline');
+    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
-        pipelines.push(response);
-        assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
-        assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
-        assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
-        assert.equal(response.getThingName(), null, 'Invalid Pipeline object after creation');
-        assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
-        assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
+        eventbuffers.push(response);
+
+        var pipeline = new Schemas.Pipeline();
+        var signals  = {
+          'current'   : 'Numeric',
+          'vibration' : 'Numeric',
+          'state'     : 'Categorical'
+        };
+        var assessment = new Schemas.Assessment();
+        assessment.setName('Health')
+            .setInputSignals(['current', 'vibration', 'state']);
+
+        pipeline.setName('Pipeline-'+Math.random())
+            .setEventbuffer(response.getId())
+            .setThingIdentifier('motor')
+            .setInputSignals(signals)
+            .setAssessment(assessment);
+
+        return falkonry.createPipeline(pipeline, function(error, response){
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+          if(!error) {
+            pipelines.push(response);
+            assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
+            assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
+            assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getThingName(), undefined, 'Invalid Pipeline object after creation');
+            assert.equal(response.getThingIdentifier(), pipeline.getThingIdentifier(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
+            assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
+          }
+          return done();
+        });
       }
-      return done();
+      else {
+        return done();
+      }
     });
   });
 
   it('Should create Pipeline with multiple assessment', function(done){
-    var pipeline = new Schemas.Pipeline();
-    var signals  = {
-      'current'   : 'Numeric',
-      'vibration' : 'Numeric',
-      'state'     : 'Categorical'
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'iso_8601'
     };
-    var assessment1 = new Schemas.Assessment;
-    assessment1.setName('Health 1')
-        .setInputSignals(['current', 'vibration']);
 
-    var assessment2 = new Schemas.Assessment;
-    assessment2.setName('Health 2')
-        .setInputSignals(['current', 'state']);
-
-    pipeline.setName('Motor Health 3')
-        .setInputSignals(signals)
-        .setThingIdentifier('motors')
-        .setAssessment(assessment1)
-        .setAssessment(assessment2);
-
-    return falkonry.createPipeline(pipeline, function(error, response){
-      assert.equal(error, null, 'Error creating Pipeline');
+    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
-        pipelines.push(response);
-        assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
-        assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
-        assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
-        assert.equal(response.getThingIdentifier(), 'motors', 'Invalid Pipeline object after creation');
-        assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
-        assert.equal(response.getAssessments().length, 2, 'Invalid Pipeline object after creation');
+        eventbuffers.push(response);
+
+        var pipeline = new Schemas.Pipeline();
+        var signals  = {
+          'current'   : 'Numeric',
+          'vibration' : 'Numeric',
+          'state'     : 'Categorical'
+        };
+        var assessment1 = new Schemas.Assessment;
+        assessment1.setName('Health 1')
+            .setInputSignals(['current', 'vibration']);
+
+        var assessment2 = new Schemas.Assessment;
+        assessment2.setName('Health 2')
+            .setInputSignals(['current', 'state']);
+
+        pipeline.setName('Pipeline-'+Math.random())
+            .setEventbuffer(response.getId())
+            .setThingIdentifier('motor')
+            .setInputSignals(signals)
+            .setAssessment(assessment1)
+            .setAssessment(assessment2);
+
+        return falkonry.createPipeline(pipeline, function(error, response){
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+          if(!error) {
+            pipelines.push(response);
+            assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
+            assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
+            assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getThingName(), undefined, 'Invalid Pipeline object after creation');
+            assert.equal(response.getThingIdentifier(), pipeline.getThingIdentifier(), 'Invalid Pipeline object after creation');
+            assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
+            assert.equal(response.getAssessments().length, 2, 'Invalid Pipeline object after creation');
+          }
+          return done();
+        });
       }
-      return done();
+      else {
+        return done();
+      }
     });
   });
 
@@ -153,7 +218,24 @@ describe.skip('Test Pipeline Creation', function(){
       });
       return tasks;
     }(), function(e, r){
-      return done();
+      return async.series(function(){
+        var tasks = [];
+        var fn = function(eventbuffer){
+          return function(_cb) {
+            return falkonry.deleteEventbuffer(eventbuffer.getId(), function(error, response){
+              if(error)
+                console.log('TestCreatePipeline', 'Error deleting eventbuffer - '+eventbuffer.getId());
+              return _cb(null, null);
+            });
+          }
+        };
+        eventbuffers.forEach(function(eachEventbuffer){
+          tasks.push(fn(eachEventbuffer));
+        });
+        return tasks;
+      }(), function(e, r){
+        return done();
+      });
     });
   });
 });
