@@ -18,13 +18,13 @@ var host     = 'http://localhost:8080';
 var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
 
 /*
- * Test to create Pipeline for following cases :
- *  1. Single thing dataset
- *  2. Multiple thing dataset
- *  3. Pipeline with multiple assessment
+ * Test to create Publication for a Pipeline of type :
+ *  1. MQTT
+ *  2. Splunk
+ *  3. Webhook
  */
 
-describe.skip('Test Pipeline Creation', function(){
+describe.skip('Test Publication Creation', function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
@@ -34,7 +34,7 @@ describe.skip('Test Pipeline Creation', function(){
     return done();
   });
 
-  it('Should create Pipeline for single thing', function(done){
+  it('Should create Publication of MQTT type', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -70,15 +70,33 @@ describe.skip('Test Pipeline Creation', function(){
 
           if(!error) {
             pipelines.push(response);
-            assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
-            assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
-            assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getThingName(), pipeline.getThingName(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
-            assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
+
+            var publication = new Schemas.Publication()
+                .setType('MQTT')
+                .setTopic('falkonry-test-pipeline')
+                .setPath('mqtt://test.mosquito.com')
+                .setUsername('test-user')
+                .setPassword('test-password')
+                .setContentType('application/json');
+            return falkonry.createPublication(response.getId(), publication, function(error, response){
+              assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+              if(!error) {
+                pipelines.push(response);
+                assert.equal(typeof response, 'object', 'Invalid Publication object after creation');
+                assert.equal(typeof response.getKey(), 'string', 'Invalid Publication object after creation');
+                assert.equal(response.getType(), publication.getType(), 'Invalid Publication object after creation');
+                assert.equal(response.getTopic(), publication.getTopic(), 'Invalid Publication object after creation');
+                assert.equal(response.getPath(), publication.getPath(), 'Invalid Publication object after creation');
+                assert.equal(response.getUsername(), publication.getUsername(), 'Invalid Publication object after creation');
+                assert.equal(response.getContentType(), publication.getContentType(), 'Invalid Publication object after creation');
+              }
+              return done();
+            });
           }
-          return done();
+          else {
+            return done();
+          }
         });
       }
       else {
@@ -87,7 +105,7 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it('Should create Pipeline for multiple thing', function(done){
+  it('Should create Publication of Splunk type', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -114,8 +132,8 @@ describe.skip('Test Pipeline Creation', function(){
 
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
-            .setThingIdentifier('motor')
             .setInputSignals(signals)
+            .setThingName('Motor')
             .setAssessment(assessment);
 
         return falkonry.createPipeline(pipeline, function(error, response){
@@ -123,16 +141,33 @@ describe.skip('Test Pipeline Creation', function(){
 
           if(!error) {
             pipelines.push(response);
-            assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
-            assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
-            assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getThingName(), undefined, 'Invalid Pipeline object after creation');
-            assert.equal(response.getThingIdentifier(), pipeline.getThingIdentifier(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
-            assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
+
+            var publication = new Schemas.Publication()
+                .setType('SPLUNK')
+                .setTopic('falkonry-test-pipeline') //splunk source name
+                .setPath('https://test.splunk.com/') //splunk host
+                .setHeaders({
+                  'Authorization' : 'Token 1234567890'
+                });
+
+            return falkonry.createPublication(response.getId(), publication, function(error, response){
+              assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+              if(!error) {
+                pipelines.push(response);
+                assert.equal(typeof response, 'object', 'Invalid Publication object after creation');
+                assert.equal(typeof response.getKey(), 'string', 'Invalid Publication object after creation');
+                assert.equal(response.getType(), publication.getType(), 'Invalid Publication object after creation');
+                assert.equal(response.getTopic(), publication.getTopic(), 'Invalid Publication object after creation');
+                assert.equal(response.getPath(), publication.getPath(), 'Invalid Publication object after creation');
+                assert.equal(typeof response.getHeaders(), 'object', 'Invalid Publication object after creation');
+              }
+              return done();
+            });
           }
-          return done();
+          else {
+            return done();
+          }
         });
       }
       else {
@@ -141,7 +176,7 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it('Should create Pipeline with multiple assessment', function(done){
+  it('Should create Publication of webhook type', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -162,36 +197,49 @@ describe.skip('Test Pipeline Creation', function(){
           'vibration' : 'Numeric',
           'state'     : 'Categorical'
         };
-        var assessment1 = new Schemas.Assessment;
-        assessment1.setName('Health 1')
-            .setInputSignals(['current', 'vibration']);
-
-        var assessment2 = new Schemas.Assessment;
-        assessment2.setName('Health 2')
-            .setInputSignals(['current', 'state']);
+        var assessment = new Schemas.Assessment();
+        assessment.setName('Health')
+            .setInputSignals(['current', 'vibration', 'state']);
 
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
-            .setThingIdentifier('motor')
             .setInputSignals(signals)
-            .setAssessment(assessment1)
-            .setAssessment(assessment2);
+            .setThingName('Motor')
+            .setAssessment(assessment);
 
         return falkonry.createPipeline(pipeline, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
           if(!error) {
             pipelines.push(response);
-            assert.equal(typeof response, 'object', 'Invalid Pipeline object after creation');
-            assert.equal(typeof response.getId(), 'string', 'Invalid Pipeline object after creation');
-            assert.equal(response.getName(), pipeline.getName(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getThingName(), undefined, 'Invalid Pipeline object after creation');
-            assert.equal(response.getThingIdentifier(), pipeline.getThingIdentifier(), 'Invalid Pipeline object after creation');
-            assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
-            assert.equal(response.getAssessments().length, 2, 'Invalid Pipeline object after creation');
+
+            var publication = new Schemas.Publication()
+                .setType('WEBHOOK')
+                .setPath('https://test.example.com/getFalkonryData') //custom endpoint to receive falkonry data
+                .setHeaders({
+                  'Authorization' : 'Token 1234567890'
+                })
+                .setContentType('application/json');
+
+            return falkonry.createPublication(response.getId(), publication, function(error, response){
+              assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+              if(!error) {
+                pipelines.push(response);
+                assert.equal(typeof response, 'object', 'Invalid Publication object after creation');
+                assert.equal(typeof response.getKey(), 'string', 'Invalid Publication object after creation');
+                assert.equal(response.getType(), publication.getType(), 'Invalid Publication object after creation');
+                assert.equal(response.getTopic(), publication.getTopic(), 'Invalid Publication object after creation');
+                assert.equal(response.getPath(), publication.getPath(), 'Invalid Publication object after creation');
+                assert.equal(typeof response.getHeaders(), 'object', 'Invalid Publication object after creation');
+                assert.equal(response.getContentType(), publication.getContentType(), 'Invalid Publication object after creation');
+              }
+              return done();
+            });
           }
-          return done();
+          else {
+            return done();
+          }
         });
       }
       else {
@@ -201,13 +249,14 @@ describe.skip('Test Pipeline Creation', function(){
   });
 
   after(function(done){
+    return done();
     return async.series(function(){
       var tasks = [];
       var fn = function(pipeline){
         return function(_cb) {
           return falkonry.deletePipeline(pipeline.getId(), function(error, response){
             if(error)
-                console.log('TestCreatePipeline', 'Error deleting pipeline - '+pipeline.getId());
+              console.log('TestCreatePipeline', 'Error deleting pipeline - '+pipeline.getId());
             return _cb(null, null);
           });
         }

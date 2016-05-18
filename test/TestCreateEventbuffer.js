@@ -23,7 +23,7 @@ var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
  *  2. Eventbuffer with json data
  *  3. Eventbuffer with csv data
  *  4. Eventbuffer with mqtt integration
- *  5. Eventbuffer with mqtt integration
+ *  5. Eventbuffer with pipeline outflow integration
  */
 
 describe.skip('Test Eventbuffer Creation', function(){
