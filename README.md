@@ -13,10 +13,14 @@ $ npm install falkonry-js-client
 
 ## Features
 
+    * Create Eventbuffer
+    * Retrieve Eventbuffers
     * Create Pipeline
     * Retrieve Pipelines
-    * Add data to Pipeline (json, stream)
+    * Add data to Eventbuffer (csv/json, stream)
     * Retrieve output of Pipeline
+    * Create subscription for Eventbuffer
+    * Create publication for Pipeline
     
 ## Quick Start
 
@@ -36,6 +40,15 @@ var options = {
 };
 
 return falkonry.createEventbuffer(eventbuffer, options, function(error, response){});
+```
+
+    * To get all Eventbuffers
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+        
+falkonry.getEventbuffers(function(error, pipelines){});
 ```
 
     * To create Pipeline

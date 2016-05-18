@@ -31,7 +31,7 @@ describe.skip('Test fetch Pipelines', function(){
     return done();
   });
 
-  it('Pipeline for single thing', function(done){
+  it('Get all Pipelines', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
