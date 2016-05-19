@@ -45,7 +45,7 @@ describe.skip('Test add input data to Eventbuffer', function(){
       if(!error) {
         eventbuffers.push(response);
         var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
-        return falkonry.addInput(response.getId(), 'json', data, function(error, response){
+        return falkonry.addInput(response.getId(), 'json', data, null, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
           if(!error) {

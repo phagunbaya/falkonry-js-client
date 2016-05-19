@@ -46,7 +46,7 @@ describe.skip('Test add input data stream to Pipeline', function(){
       if(!error) {
         eventbuffers.push(response);
         var data = fs.createReadStream(__dirname+'/resources/inputData.json');
-        return falkonry.addInputFromStream(response.getId(), 'json', data, function(error, response){
+        return falkonry.addInputFromStream(response.getId(), 'json', data, null, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
           if(!error) {
@@ -76,7 +76,7 @@ describe.skip('Test add input data stream to Pipeline', function(){
       if(!error) {
         eventbuffers.push(response);
         var data = fs.createReadStream(__dirname+'/resources/inputData.csv');
-        return falkonry.addInputFromStream(response.getId(), 'csv', data, function(error, response){
+        return falkonry.addInputFromStream(response.getId(), 'csv', data, null, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
           if(!error) {
@@ -88,6 +88,30 @@ describe.skip('Test add input data stream to Pipeline', function(){
       else {
         return done();
       }
+    });
+  });
+
+  it('Should add csv data stream to a particular subscription of an eventbuffer', function(done){
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'iso_8601'
+    };
+
+    //create event buffer and add a subscription
+    var options = {
+      'subscription' : '<subscription-id>'
+    };
+    var data = fs.createReadStream(__dirname+'/resources/inputData.csv');
+    return falkonry.addInputFromStream('<eventbuffer-id>', 'csv', data, options, function(error, response){
+      assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+      if(!error) {
+        assert.equal(typeof response.__$id, 'string', 'Cannot add input data to Pipeline');
+      }
+      return done();
     });
   });
 
