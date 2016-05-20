@@ -19,8 +19,8 @@ $ npm install falkonry-js-client
     * Retrieve Pipelines
     * Add data to Eventbuffer (csv/json, stream)
     * Retrieve output of Pipeline
-    * Create subscription for Eventbuffer
-    * Create publication for Pipeline
+    * Create/update/delete subscription for Eventbuffer
+    * Create/update/delete publication for Pipeline
     
 ## Quick Start
 
