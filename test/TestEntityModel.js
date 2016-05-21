@@ -116,7 +116,6 @@ describe('Test entity model validation', function(){
     assert.equal(subscription.getTopic(), 'falkonry-eb-1-test', 'Invalid type');
     assert.equal(subscription.getPath(), 'mqtt://test.mosquito.com', 'Invalid type');
     assert.equal(subscription.getUsername(), 'test-user', 'Invalid type');
-    assert.equal(subscription.getPassword(), 'test', 'Invalid type');
     assert.equal(subscription.getTimeFormat(), 'YYYY-MM-DD HH:mm:ss', 'Invalid type');
     assert.equal(subscription.getTimeIdentifier(), 'time', 'Invalid type');
     return done();
