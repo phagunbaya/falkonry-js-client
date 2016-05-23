@@ -14,6 +14,7 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
+var host     = '';
 var token    = ''; //auth token
 
 /*
@@ -22,41 +23,58 @@ var token    = ''; //auth token
 
 describe.skip('Test fetch Pipelines', function(){
   var falkonry = null;
+  var eventbuffers = [];
   var pipelines = [];
 
   before(function(done){
-    falkonry = new Falkonry('https://dev.falkonry.io', token);
+    falkonry = new Falkonry(host, token);
     return done();
   });
 
-  it('Pipeline for single thing', function(done){
-    var pipeline = new Schemas.Pipeline();
-    var signals  = {
-      'current'   : 'Numeric',
-      'vibration' : 'Numeric',
-      'state'     : 'Categorical'
+  it('Get all Pipelines', function(done){
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'iso_8601'
     };
-    var assessment = new Schemas.Assessment();
-    assessment.setName('Health')
-        .setInputSignals(['current', 'vibration', 'state']);
 
-    pipeline.setName('Motor Health')
-        .setTimeIdentifier('time')
-        .setTimeFormat('YYYY-MM-DD HH:MM:SS')
-        .setInputSignals(signals)
-        .setThingName('Motor')
-        .setAssessment(assessment);
-
-    return falkonry.createPipeline(pipeline, function(error, response){
-      assert.equal(error, null, 'Error creating Pipeline');
+    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
-        pipelines.push(response);
-        return falkonry.getPipelines(function(error, response){
-          assert.equal(error, null, 'Error fetching Pipelines');
+        eventbuffers.push(response);
+
+        var pipeline = new Schemas.Pipeline();
+        var signals  = {
+          'current'   : 'Numeric',
+          'vibration' : 'Numeric',
+          'state'     : 'Categorical'
+        };
+        var assessment = new Schemas.Assessment();
+        assessment.setName('Health')
+            .setInputSignals(['current', 'vibration', 'state']);
+
+        pipeline.setName('Pipeline-'+Math.random())
+            .setEventbuffer(response.getId())
+            .setInputSignals(signals)
+            .setThingName('Motor')
+            .setAssessment(assessment);
+
+        return falkonry.createPipeline(pipeline, function(error, response){
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
           if(!error) {
-            assert.equal(response.length > 0, true, 'Cannot fetch Pipelines');
+            pipelines.push(response);
+            return falkonry.getPipelines(function(error, response){
+              assert.equal(error, null, 'Error fetching Pipelines');
+
+              if(!error) {
+                assert.equal(response.length > 0, true, 'Cannot fetch Pipelines');
+              }
+              return done();
+            });
           }
           return done();
         });
@@ -84,7 +102,24 @@ describe.skip('Test fetch Pipelines', function(){
       });
       return tasks;
     }(), function(e, r){
-      return done();
+      return async.series(function(){
+        var tasks = [];
+        var fn = function(eventbuffer){
+          return function(_cb) {
+            return falkonry.deleteEventbuffer(eventbuffer.getId(), function(error, response){
+              if(error)
+                console.log('TestGetPipelines', 'Error deleting eventbuffer - '+eventbuffer.getId());
+              return _cb(null, null);
+            });
+          }
+        };
+        eventbuffers.forEach(function(eachEventbuffer){
+          tasks.push(fn(eachEventbuffer));
+        });
+        return tasks;
+      }(), function(e, r){
+        return done();
+      });
     });
   });
 });

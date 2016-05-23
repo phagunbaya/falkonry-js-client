@@ -14,14 +14,14 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
+var host     = '';
+var token    = ''; //auth token
 
 /*
- * Test to add data to a Eventbuffer
+ * Test to get Eventbuffers for an account
  */
 
-describe.skip('Test add input data to Eventbuffer', function(){
+describe.skip('Test fetch Eventbuffers', function(){
   var falkonry = null;
   var eventbuffers = [];
 
@@ -30,7 +30,7 @@ describe.skip('Test add input data to Eventbuffer', function(){
     return done();
   });
 
-  it('Should add json input data', function(done){
+  it('Get all eventbuffers', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -44,12 +44,12 @@ describe.skip('Test add input data to Eventbuffer', function(){
 
       if(!error) {
         eventbuffers.push(response);
-        var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
-        return falkonry.addInput(response.getId(), 'json', data, null, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+        return falkonry.getEventbuffers(function(error, response){
+          assert.equal(error, null, 'Error fetching Eventbuffers');
 
           if(!error) {
-            assert.equal(typeof response.__$id, 'string', 'Cannot add input data to Pipeline');
+            assert.equal(response.length > 0, true, 'Cannot fetch Eventbuffers');
           }
           return done();
         });
@@ -67,13 +67,13 @@ describe.skip('Test add input data to Eventbuffer', function(){
         return function(_cb) {
           return falkonry.deleteEventbuffer(eventbuffer.getId(), function(error, response){
             if(error)
-              console.log('TestAddData', 'Error deleting eventbuffer - '+eventbuffer.getId());
+              console.log('TestGetPipelines', 'Error deleting eventbuffer - '+eventbuffer.getId());
             return _cb(null, null);
           });
         }
       };
-      eventbuffers.forEach(function(eachEventBuffer){
-        tasks.push(fn(eachEventBuffer));
+      eventbuffers.forEach(function(eachEventbuffer){
+        tasks.push(fn(eachEventbuffer));
       });
       return tasks;
     }(), function(e, r){

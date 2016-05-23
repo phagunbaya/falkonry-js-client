@@ -13,6 +13,7 @@
 var fs       = require('fs');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
+var host     = '';
 var token    = ''; //auth token
 var pipeline = ''; //Pipeline id
 
@@ -25,7 +26,7 @@ describe.skip('Test get output of a Pipeline', function(){
   var falkonry = null;
 
   before(function(done){
-    falkonry = new Falkonry('http://localhost:8080', token);
+    falkonry = new Falkonry(host, token);
     return done();
   });
 
