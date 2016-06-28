@@ -14,7 +14,7 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'localhost:8080';
+var host     = 'http://localhost:8080';
 var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
 
 /*
@@ -26,7 +26,7 @@ var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
  *  5. Eventbuffer with pipeline outflow integration
  */
 
-describe('Test Eventbuffer Creation', function(){
+describe.skip('Test Eventbuffer Creation', function(){
   var falkonry = null;
   var eventbuffers = [];
 
