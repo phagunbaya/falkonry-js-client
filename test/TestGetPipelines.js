@@ -14,8 +14,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = '';
-var token    = ''; //auth token
+var host     = 'localhost:8080';
+var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
 
 /*
  * Test to get Pipelines for an account
@@ -60,10 +60,11 @@ describe.skip('Test fetch Pipelines', function(){
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
             .setThingName('Motor')
-            .setAssessment(assessment);
+            .setAssessment(assessment)
+            .setInterval(null,"PT1S");
 
         return falkonry.createPipeline(pipeline, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+          assert.equal(error, null, 'Error adding input data to Pipeline: '+error);
 
           if(!error) {
             pipelines.push(response);

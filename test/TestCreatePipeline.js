@@ -14,8 +14,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
+var host     = 'localhost:8080';
+var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
 
 /*
  * Test to create Pipeline for following cases :
@@ -44,7 +44,7 @@ describe.skip('Test Pipeline Creation', function(){
     };
 
     return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error, null, 'Error creating Eventbuffer');
+      assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
 
       if(!error) {
         eventbuffers.push(response);
@@ -57,16 +57,17 @@ describe.skip('Test Pipeline Creation', function(){
         };
         var assessment = new Schemas.Assessment();
         assessment.setName('Health')
-            .setInputSignals(['current', 'vibration', 'state']);
+            .setInputSignals(['current', 'vibration', 'state']);    
 
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
             .setThingName('Motor')
-            .setAssessment(assessment);
+            .setAssessment(assessment)
+            .setInterval(null, "PT1S");
 
         return falkonry.createPipeline(pipeline, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+JSON.stringify(error));
 
           if(!error) {
             pipelines.push(response);
@@ -116,7 +117,8 @@ describe.skip('Test Pipeline Creation', function(){
             .setEventbuffer(response.getId())
             .setThingIdentifier('motor')
             .setInputSignals(signals)
-            .setAssessment(assessment);
+            .setAssessment(assessment)
+            .setInterval(null, "PT1S");
 
         return falkonry.createPipeline(pipeline, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
@@ -175,7 +177,8 @@ describe.skip('Test Pipeline Creation', function(){
             .setThingIdentifier('motor')
             .setInputSignals(signals)
             .setAssessment(assessment1)
-            .setAssessment(assessment2);
+            .setAssessment(assessment2)
+            .setInterval(null, "PT1S");
 
         return falkonry.createPipeline(pipeline, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);

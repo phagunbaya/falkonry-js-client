@@ -15,8 +15,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
+var host     = 'localhost:8080';
+var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l';//auth token
 
 /*
  * Test to add data stream to a Pipeline
@@ -47,7 +47,7 @@ describe.skip('Test add input data stream to Pipeline', function(){
         eventbuffers.push(response);
         var data = fs.createReadStream(__dirname+'/resources/inputData.json');
         return falkonry.addInputFromStream(response.getId(), 'json', data, null, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+JSON.stringify(error));
 
           if(!error) {
             assert.equal(typeof response.__$id, 'string', 'Cannot add input data to Pipeline');

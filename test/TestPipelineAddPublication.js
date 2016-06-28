@@ -14,8 +14,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
+var host     = 'localhost:8080';
+var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
 
 /*
  * Test to create Publication for a Pipeline of type :
@@ -63,10 +63,11 @@ describe.skip('Test Publication Creation', function(){
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
             .setThingName('Motor')
-            .setAssessment(assessment);
+            .setAssessment(assessment)
+            .setInterval(null,"PT1S");
 
         return falkonry.createPipeline(pipeline, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+          assert.equal(error, null, 'Error creating pipeline: '+JSON.stringify(error));
 
           if(!error) {
             pipelines.push(response);
@@ -79,7 +80,7 @@ describe.skip('Test Publication Creation', function(){
                 .setPassword('test-password')
                 .setContentType('application/json');
             return falkonry.createPublication(response.getId(), publication, function(error, response){
-              assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+              assert.equal(error, null, 'Error adding Publication: '+JSON.stringify(error));
 
               if(!error) {
                 pipelines.push(response);
@@ -104,78 +105,6 @@ describe.skip('Test Publication Creation', function(){
       }
     });
   });
-
-  it('Should create Publication of Splunk type', function(done){
-    var eventbuffer = new Schemas.Eventbuffer();
-    eventbuffer.setName('Test-EB-'+Math.random());
-
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error, null, 'Error creating Eventbuffer');
-
-      if(!error) {
-        eventbuffers.push(response);
-
-        var pipeline = new Schemas.Pipeline();
-        var signals  = {
-          'current'   : 'Numeric',
-          'vibration' : 'Numeric',
-          'state'     : 'Categorical'
-        };
-        var assessment = new Schemas.Assessment();
-        assessment.setName('Health')
-            .setInputSignals(['current', 'vibration', 'state']);
-
-        pipeline.setName('Pipeline-'+Math.random())
-            .setEventbuffer(response.getId())
-            .setInputSignals(signals)
-            .setThingName('Motor')
-            .setAssessment(assessment);
-
-        return falkonry.createPipeline(pipeline, function(error, response){
-          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
-
-          if(!error) {
-            pipelines.push(response);
-
-            var publication = new Schemas.Publication()
-                .setType('SPLUNK')
-                .setTopic('falkonry-test-pipeline') //splunk source name
-                .setPath('https://test.splunk.com/') //splunk host
-                .setHeaders({
-                  'Authorization' : 'Token 1234567890'
-                });
-
-            return falkonry.createPublication(response.getId(), publication, function(error, response){
-              assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
-
-              if(!error) {
-                pipelines.push(response);
-                assert.equal(typeof response, 'object', 'Invalid Publication object after creation');
-                assert.equal(typeof response.getKey(), 'string', 'Invalid Publication object after creation');
-                assert.equal(response.getType(), publication.getType(), 'Invalid Publication object after creation');
-                assert.equal(response.getTopic(), publication.getTopic(), 'Invalid Publication object after creation');
-                assert.equal(response.getPath(), publication.getPath(), 'Invalid Publication object after creation');
-                assert.equal(typeof response.getHeaders(), 'object', 'Invalid Publication object after creation');
-              }
-              return done();
-            });
-          }
-          else {
-            return done();
-          }
-        });
-      }
-      else {
-        return done();
-      }
-    });
-  });
-
   it('Should create Publication of webhook type', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
@@ -205,7 +134,8 @@ describe.skip('Test Publication Creation', function(){
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
             .setThingName('Motor')
-            .setAssessment(assessment);
+            .setAssessment(assessment)
+            .setInterval(null,"PT1S");
 
         return falkonry.createPipeline(pipeline, function(error, response){
           assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
