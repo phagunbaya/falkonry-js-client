@@ -101,7 +101,8 @@ falkonry.getPipelines(function(error, pipelines){});
 var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
-return falkonry.addInput('eventbufferId', 'json', data, function(error, response){});
+var options = null
+return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
 
     * To add csv data to Eventbuffer
@@ -110,7 +111,8 @@ return falkonry.addInput('eventbufferId', 'json', data, function(error, response
 var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 var data = 'time,current,vibration,state\n2016-03-01 01:01:01,12.4,3.4,On';
-return falkonry.addInput('eventbufferId', 'csv', data, function(error, response){});
+var options = null
+return falkonry.addInput('eventbufferId', 'csv', data, options, function(error, response){});
 ```
 
     * To add data from a stream to Eventbuffer
@@ -119,8 +121,38 @@ return falkonry.addInput('eventbufferId', 'csv', data, function(error, response)
 var Falkonry = require('falkonry-js-client').Client;
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
 var stream   = fs.createReadStream('/tmp/sample.json');
+var options = null
+var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, options, function(error, response){});
+```
 
-var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, function(error, response){});
+    * To add json verification data to Pipeline
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+var options = null
+return falkonry.addVerification('pipelineId', 'json', data, options, function(error, response){});
+```
+
+    * To add csv verification data to Pipeline
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+var data = 'time,current,vibration,state\n2016-03-01 01:01:01,12.4,3.4,On';
+var options = null
+return falkonry.addInput('pipelineId', 'csv', data, options, function(error, response){});
+```
+
+    * To add verification data from a stream to Pipeline
+    
+```js
+var Falkonry = require('falkonry-js-client').Client;
+var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
+var stream   = fs.createReadStream('/tmp/sample.json');
+var options = null
+var streamHandler = falkonry.addVerificationFromStream('pipelineid', 'json', stream, options, function(error, response){});
 ```
 
     * To get output of a Pipeline
