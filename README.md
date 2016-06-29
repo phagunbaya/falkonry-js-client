@@ -69,9 +69,9 @@ var options = {
 return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
     var pipeline = new Schemas.Pipeline();
     var signals  = {
-      'current'   : 'Numeric',
-      'vibration' : 'Numeric',
-      'state'     : 'Categorical'
+      'current'   : ['Numeric', 'Samples'],
+      'vibration' : 'Numeric', // default eventType is 'Samples'
+      'state'     : ['Categorical', 'Occurrences']
     };
     var assessment = new Schemas.Assessment();
     assessment.setName('Health')

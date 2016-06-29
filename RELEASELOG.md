@@ -1,5 +1,19 @@
 # Release Log
 
+### 0.2.1
+* Support to add eventType for signal
+* Support to add verification data
+
+### 0.2.0
+* Create Eventbuffer
+* Retrieve Eventbuffers
+* Create Pipeline
+* Retrieve Pipelines
+* Add data to Eventbuffer (csv/json, stream)
+* Retrieve output of Pipeline
+* Create/update/delete subscription for Eventbuffer
+* Create/update/delete publication for Pipeline
+
 ### 0.1.3
 * Support to create Eventbuffer
 * Support to create Pipeline from Eventbuffer
