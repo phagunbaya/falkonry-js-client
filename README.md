@@ -130,7 +130,7 @@ var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+var data = '{"time" : "2011-03-26T12:00:00Z", "car" : "HI3821", "end" : "2012-06-01T00:00:00Z", "Health" : "Normal"}';
 var options = null
 return falkonry.addVerification('pipelineId', 'json', data, options, function(error, response){});
 ```
@@ -140,7 +140,7 @@ return falkonry.addVerification('pipelineId', 'json', data, options, function(er
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-var data = 'time,current,vibration,state\n2016-03-01 01:01:01,12.4,3.4,On';
+var data = "time,end,car,Health\n2011-03-31T00:00:00Z,2011-04-01T00:00:00Z,IL9753,Normal\n2011-03-31T00:00:00Z,2011-04-01T00:00:00Z,HI3821,Normal";
 var options = null
 return falkonry.addInput('pipelineId', 'csv', data, options, function(error, response){});
 ```
