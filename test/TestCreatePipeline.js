@@ -24,7 +24,7 @@ var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
  *  3. Pipeline with multiple assessment
  */
 
-describe('Test Pipeline Creation', function(){
+describe.skip('Test Pipeline Creation', function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
