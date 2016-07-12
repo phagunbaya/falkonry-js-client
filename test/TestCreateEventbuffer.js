@@ -26,7 +26,7 @@ var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0'; //auth token
  *  5. Eventbuffer with pipeline outflow integration
  */
 
-describe('Test Eventbuffer Creation', function(){
+describe.skip('Test Eventbuffer Creation', function(){
   var falkonry = null;
   var eventbuffers = [];
 

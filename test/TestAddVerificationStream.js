@@ -18,7 +18,7 @@ var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
 var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0';
 
-describe("Test add verification data from stream to Pipeline", function(){
+describe.skip("Test add verification data from stream to Pipeline", function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
