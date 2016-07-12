@@ -30,11 +30,9 @@ describe.skip("Test add verification data to Pipeline", function(){
   it("should add verification csv data", function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
-    var options = {
-          'timeIdentifier' : 'time',
-          'timeFormat'     : 'iso_8601'
-      };
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error,null,"Error creating Eventbuffer" + error);
 
       if(!error){
@@ -89,11 +87,9 @@ describe.skip("Test add verification data to Pipeline", function(){
   it("should add verification json data", function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
-    var options = {
-          'timeIdentifier' : 'time',
-          'timeFormat'     : 'iso_8601'
-      };
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error,null,"Error creating Eventbuffer" + error);
 
       if(!error){

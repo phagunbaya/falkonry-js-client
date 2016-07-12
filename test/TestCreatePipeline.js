@@ -34,16 +34,14 @@ describe.skip('Test Pipeline Creation', function(){
     return done();
   });
 
-  it.skip('Should create Pipeline for single thing', function(done){
+  it('Should create Pipeline for single thing', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
 
       if(!error) {
@@ -91,16 +89,14 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it.skip('Should create Pipeline for single thing with eventType', function(done){
+  it('Should create Pipeline for single thing with eventType', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
 
       if(!error) {
@@ -148,18 +144,17 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it.skip('Should create Pipeline for multiple thing', function(done){
+  it('Should create Pipeline for multiple thing', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601',
-      'thingIdentifier': 'motor'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
+    eventbuffer.setThingIdentifier("motor");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
+
       if(!error) {
         eventbuffers.push(response);
         var data = "time, motor, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
@@ -181,7 +176,6 @@ describe.skip('Test Pipeline Creation', function(){
                 .setInputSignals(signals)
                 .setAssessment(assessment)
                 .setInterval(null, "PT1S");
-
             return falkonry.createPipeline(pipeline, function(error, response){
               assert.equal(error, null, 'Error adding creating pipeline: '+JSON.stringify(error));
               if(!error) {
@@ -192,7 +186,7 @@ describe.skip('Test Pipeline Creation', function(){
                 assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
                 assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
                 assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
-                assert.equal(response.getThingIdentifier(), options["thingIdentifier"], 'Invalid Pipeline object after creation');
+                assert.equal(response.getThingIdentifier(), eventbuffer.getThingIdentifier(), 'Invalid Pipeline object after creation');
               }
               return done();
             });
@@ -205,17 +199,15 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it.skip('Should create Pipeline with multiple assessment', function(done){
+  it('Should create Pipeline with multiple assessment', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601',
-      'thingIdentifier': 'motor'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
+    eventbuffer.setThingIdentifier("motor");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
 
       if(!error) {
@@ -254,7 +246,7 @@ describe.skip('Test Pipeline Creation', function(){
                 assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
                 assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
                 assert.equal(response.getAssessments().length, 2, 'Invalid Pipeline object after creation');
-                assert.equal(response.getThingIdentifier(), options["thingIdentifier"], 'Invalid Pipeline object after creation');
+                assert.equal(response.getThingIdentifier(), eventbuffer.getThingIdentifier(), 'Invalid Pipeline object after creation');
               }
               return done();
             });

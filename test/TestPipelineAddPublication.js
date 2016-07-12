@@ -38,12 +38,10 @@ describe.skip('Test Publication Creation', function(){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {

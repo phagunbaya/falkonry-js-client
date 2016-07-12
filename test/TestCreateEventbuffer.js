@@ -38,13 +38,9 @@ describe.skip('Test Eventbuffer Creation', function(){
   it('Should create Eventbuffer with singleThing', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
-
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
       if(!error) {
         eventbuffers.push(response);
@@ -62,13 +58,11 @@ describe.skip('Test Eventbuffer Creation', function(){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'thingIdentifier' : 'thing'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    eventbuffer.setThingIdentifier("thing");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
       if(!error) {
         eventbuffers.push(response);
@@ -86,17 +80,14 @@ describe.skip('Test Eventbuffer Creation', function(){
   it('Should create Eventbuffer for Historian', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    eventbuffer.setSignalsTagField("tag");
+    eventbuffer.setSignalsDelimiter("_");
+    eventbuffer.setSignalsLocation("prefix");
+    eventbuffer.setValueColumn("value");
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'signalsTagField' : 'tag',
-      'signalsDelimiter' : '_',
-      'signalsLocation' : 'prefix',
-      'valueColumn' : 'value'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
@@ -118,13 +109,10 @@ describe.skip('Test Eventbuffer Creation', function(){
   it('Should create Eventbuffer with mqtt subscription', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
@@ -159,12 +147,10 @@ describe.skip('Test Eventbuffer Creation', function(){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
@@ -193,17 +179,14 @@ describe.skip('Test Eventbuffer Creation', function(){
   it('Should create Eventbuffer with mqtt subscription for historian data', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    eventbuffer.setSignalsTagField("tag");
+    eventbuffer.setSignalsDelimiter("_");
+    eventbuffer.setSignalsLocation("prefix");
+    eventbuffer.setValueColumn("value");
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'signalsTagField' : 'tag',
-      'signalsDelimiter' : '_',
-      'signalsLocation' : 'prefix',
-      'valueColumn' : 'value'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
