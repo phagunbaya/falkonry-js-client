@@ -64,25 +64,30 @@ eventbuffer.setName('Test-Eeventbuffer-01');
 var options = {
   'timeIdentifier' : 'time',
   'timeFormat'     : 'iso_8601'
+  'thingIdentifier': 'motor'
 };
 
 return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-    var pipeline = new Schemas.Pipeline();
-    var signals  = {
-      'current'   : ['Numeric', 'Samples'],
-      'vibration' : 'Numeric', // default eventType is 'Samples'
-      'state'     : ['Categorical', 'Occurrences']
-    };
-    var assessment = new Schemas.Assessment();
-    assessment.setName('Health')
-        .setInputSignals(['current', 'vibration', 'state']);
+    var data = "time, motor, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
+    var eventbuffer_id = response.getId();
+    return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
+        var pipeline = new Schemas.Pipeline();
+        var signals  = {
+        'current'   : ['Numeric', 'Samples'],
+        'vibration' : 'Numeric', // default eventType is 'Samples'
+        'state'     : ['Categorical', 'Occurrences']
+        };
+        var assessment = new Schemas.Assessment();
+        assessment.setName('Health')
+            .setInputSignals(['current', 'vibration', 'state']);
 
-    pipeline.setName('Pipeline-01')
-        .setEventbuffer(response.getId())
-        .setInputSignals(signals)
-        .setThingName('Motor')
-        .setAssessment(assessment);
-    return falkonry.createPipeline(pipeline, function(error, response){});
+        pipeline.setName('Pipeline-01')
+            .setEventbuffer(eventbuffer_id)
+            .setInputSignals(signals)
+            .setThingName('Motor')
+            .setAssessment(assessment);
+        return falkonry.createPipeline(pipeline, function(error, response){});
+    });
 });
 ```
 
