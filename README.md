@@ -34,12 +34,10 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eeventbuffer-01');
 
-var options = {
-  'timeIdentifier' : 'time',
-  'timeFormat'     : 'iso_8601'
-};
+eventbuffer.setTimeIdentifier("time");
+eventbuffer.setTimeFormat("iso_8601");
 
-return falkonry.createEventbuffer(eventbuffer, options, function(error, response){});
+return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
 
     * To get all Eventbuffers
@@ -60,14 +58,11 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eeventbuffer-01');
+eventbuffer.setTimeIdentifier("time");
+eventbuffer.setTimeFormat("iso_8601");
+eventbuffer.setThingIdentifier("motor");
 
-var options = {
-  'timeIdentifier' : 'time',
-  'timeFormat'     : 'iso_8601'
-  'thingIdentifier': 'motor'
-};
-
-return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+return falkonry.createEventbuffer(eventbuffer, function(error, response){
     var data = "time, motor, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
     var eventbuffer_id = response.getId();
     return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
