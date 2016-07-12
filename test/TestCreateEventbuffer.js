@@ -14,8 +14,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
+var host     = 'http://192.168.2.137:8080';
+var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0'; //auth token
 
 /*
  * Test to create Eventbuffer for following cases :
@@ -26,7 +26,7 @@ var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
  *  5. Eventbuffer with pipeline outflow integration
  */
 
-describe.skip('Test Eventbuffer Creation', function(){
+describe('Test Eventbuffer Creation', function(){
   var falkonry = null;
   var eventbuffers = [];
 
@@ -35,7 +35,7 @@ describe.skip('Test Eventbuffer Creation', function(){
     return done();
   });
 
-  it('Should create Eventbuffer', function(done){
+  it('Should create Eventbuffer with singleThing', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -46,28 +46,54 @@ describe.skip('Test Eventbuffer Creation', function(){
 
     return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
-
       if(!error) {
         eventbuffers.push(response);
         assert.equal(typeof response, 'object', 'Invalid Eventbuffer object after creation');
         assert.equal(typeof response.getId(), 'string', 'Invalid Eventbuffer object after creation');
         assert.equal(response.getName(), eventbuffer.getName(), 'Invalid Eventbuffer object after creation');
-        assert.equal(response.getSchemaList().length, 0, 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSchemaList().length, 1, 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
       }
       return done();
     });
   });
 
-  it('Should create Eventbuffer with json data', function(done){
+  it('Should create Eventbuffer with multiple things', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
     var options = {
       'timeIdentifier' : 'time',
       'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'dataType'       : 'json',
-      'data'           : {'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'}
+      'thingIdentifier' : 'thing'
+    };
+
+    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer');
+      if(!error) {
+        eventbuffers.push(response);
+        assert.equal(typeof response, 'object', 'Invalid Eventbuffer object after creation');
+        assert.equal(typeof response.getId(), 'string', 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getName(), eventbuffer.getName(), 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSchemaList().length, 1, 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getThingIdentifier(), "thing", 'Invalid Eventbuffer object after creation');
+      }
+      return done();
+    });
+  });
+
+  it('Should create Eventbuffer for Historian', function(done){
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+
+    var options = {
+      'timeIdentifier' : 'time',
+      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
+      'signalsTagField' : 'tag',
+      'signalsDelimiter' : '_',
+      'signalsLocation' : 'prefix',
+      'valueColumn' : 'value'
     };
 
     return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
@@ -78,35 +104,12 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(typeof response, 'object', 'Invalid Eventbuffer object after creation');
         assert.equal(typeof response.getId(), 'string', 'Invalid Eventbuffer object after creation');
         assert.equal(response.getName(), eventbuffer.getName(), 'Invalid Eventbuffer object after creation');
-        assert.equal(response.getSchemaList().length, 0, 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSchemaList().length, 1, 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
-      }
-      return done();
-    });
-  });
-
-  it('Should create Eventbuffer with csv data', function(done){
-    var eventbuffer = new Schemas.Eventbuffer();
-    eventbuffer.setName('Test-EB-'+Math.random());
-
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'dataType'       : 'csv',
-      'data'           : 'time, current, vibration, state\n'+
-          '2016-03-01 01:01:01, 12.4, 3.4, On'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error, null, 'Error creating Eventbuffer');
-
-      if(!error) {
-        eventbuffers.push(response);
-        assert.equal(typeof response, 'object', 'Invalid Eventbuffer object after creation');
-        assert.equal(typeof response.getId(), 'string', 'Invalid Eventbuffer object after creation');
-        assert.equal(response.getName(), eventbuffer.getName(), 'Invalid Eventbuffer object after creation');
-        assert.equal(response.getSchemaList().length, 0, 'Invalid Eventbuffer object after creation');
-        assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSignalsTagField(), "tag", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSignalsDelimiter(), "_", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSignalsLocation(), "prefix", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getValueColumn(), "value", 'Invalid Eventbuffer object after creation');
       }
       return done();
     });
@@ -119,8 +122,6 @@ describe.skip('Test Eventbuffer Creation', function(){
     var options = {
       'timeIdentifier' : 'time',
       'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'dataType'       : 'json',
-      'data'           : {'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'}
     };
 
     return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
@@ -134,9 +135,7 @@ describe.skip('Test Eventbuffer Creation', function(){
             .setPath('mqtt://test.mosquito.com')
             .setTopic('falkonry-eb-1-test')
             .setUsername('test-user')
-            .setPassword('test')
-            .setTimeFormat('YYYY-MM-DD HH:mm:ss')
-            .setTimeIdentifier('time');
+            .setPassword('test');
 
         return falkonry.createSubscription(eventbuffer.getId(), subscription, function(error, response){
           assert.equal(error, null, 'Error creating Subscription');
@@ -147,47 +146,8 @@ describe.skip('Test Eventbuffer Creation', function(){
             assert.equal(response.getTopic(), subscription.getTopic(), 'Invalid Subscription object after creation');
             assert.equal(response.getPath(), subscription.getPath(), 'Invalid Subscription object after creation');
             assert.equal(response.getUsername(), subscription.getUsername(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeIdentifier(), subscription.getTimeIdentifier(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeFormat(), subscription.getTimeFormat(), 'Invalid Subscription object after creation');
-          }
-          return done();
-        });
-      }
-    });
-  });
-
-  it('Should create Eventbuffer with splunk subscription', function(done){
-    var eventbuffer = new Schemas.Eventbuffer();
-    eventbuffer.setName('Test-EB-'+Math.random());
-
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'dataType'       : 'json',
-      'data'           : {'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'}
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error, null, 'Error creating Eventbuffer');
-
-      if(!error) {
-        eventbuffers.push(response);
-        eventbuffer = response;
-        var subscription = new Schemas.Subscription()
-            .setType('SPLUNK')
-            .setPath('source="motor_health"')
-            .setTimeFormat('YYYY-MM-DD HH:mm:ss')
-            .setTimeIdentifier('time');
-
-        return falkonry.createSubscription(eventbuffer.getId(), subscription, function(error, response){
-          assert.equal(error, null, 'Error creating Subscription');
-          if(!error) {
-            assert.equal(typeof response, 'object', 'Invalid Subscription object after creation');
-            assert.equal(typeof response.getKey(), 'string', 'Invalid Subscription object after creation');
-            assert.equal(response.getType(), 'SPLUNK', 'Invalid Subscription object after creation');
-            assert.equal(response.getPath(), subscription.getPath(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeIdentifier(), subscription.getTimeIdentifier(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeFormat(), subscription.getTimeFormat(), 'Invalid Subscription object after creation');
+            assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
+            assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
           }
           return done();
         });
@@ -202,8 +162,6 @@ describe.skip('Test Eventbuffer Creation', function(){
     var options = {
       'timeIdentifier' : 'time',
       'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'dataType'       : 'json',
-      'data'           : {'time' :'2016-03-01 01:01:01', 'current' : 12.4, 'vibration' : 3.4, 'state' : 'On'}
     };
 
     return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
@@ -223,8 +181,8 @@ describe.skip('Test Eventbuffer Creation', function(){
             assert.equal(typeof response.getKey(), 'string', 'Invalid Subscription object after creation');
             assert.equal(response.getType(), 'PIPELINEOUTFLOW', 'Invalid Subscription object after creation');
             assert.equal(response.getPath(), subscription.getPath(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeIdentifier(), 'time', 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeFormat(), 'millis', 'Invalid Subscription object after creation');
+            assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
+            assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
           }
           return done();
         });
@@ -239,8 +197,10 @@ describe.skip('Test Eventbuffer Creation', function(){
     var options = {
       'timeIdentifier' : 'time',
       'timeFormat'     : 'YYYY-MM-DD HH:mm:ss',
-      'dataType'       : 'json',
-      'data'           : {'time': '2016-03-01 01:01:01', 'tag': 'current_motor1', 'value': 12.4}
+      'signalsTagField' : 'tag',
+      'signalsDelimiter' : '_',
+      'signalsLocation' : 'prefix',
+      'valueColumn' : 'value'
     };
 
     return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
@@ -254,14 +214,7 @@ describe.skip('Test Eventbuffer Creation', function(){
             .setPath('mqtt://test.mosquito.com')
             .setTopic('falkonry-eb-1-test')
             .setUsername('test-user')
-            .setPassword('test')
-            .setTimeFormat('YYYY-MM-DD HH:mm:ss')
-            .setTimeIdentifier('time')
-            .setHistorian(true)
-            .setValueColumn('value')
-            .setSignalsDelimiter('_')
-            .setSignalsTagField('tag')
-            .setSignalsLocation('prefix');
+            .setPassword('test');
 
         return falkonry.createSubscription(eventbuffer.getId(), subscription, function(error, response){
           assert.equal(error, null, 'Error creating Subscription');
@@ -272,13 +225,8 @@ describe.skip('Test Eventbuffer Creation', function(){
             assert.equal(response.getTopic(), subscription.getTopic(), 'Invalid Subscription object after creation');
             assert.equal(response.getPath(), subscription.getPath(), 'Invalid Subscription object after creation');
             assert.equal(response.getUsername(), subscription.getUsername(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeIdentifier(), subscription.getTimeIdentifier(), 'Invalid Subscription object after creation');
-            assert.equal(response.getTimeFormat(), subscription.getTimeFormat(), 'Invalid Subscription object after creation');
-            assert.equal(response.getSignalsDelimiter(), subscription.getSignalsDelimiter(), 'Invalid Subscription object after creation');
-            assert.equal(response.getSignalsLocation(), subscription.getSignalsLocation(), 'Invalid Subscription object after creation');
-            assert.equal(response.getValueColumn(), subscription.getValueColumn(), 'Invalid Subscription object after creation');
-            assert.equal(response.getHistorian(), subscription.getHistorian(), 'Invalid Subscription object after creation');
-            assert.equal(response.getSignalsTagField(), subscription.getSignalsTagField(), 'Invalid Subscription object after creation');
+            assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
+            assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
           }
           return done();
         });

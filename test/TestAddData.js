@@ -14,14 +14,14 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
+var host     = 'http://192.168.2.137:8080';
+var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0'; //auth token
 
 /*
  * Test to add data to a Eventbuffer
  */
 
-describe.skip('Test add input data to Eventbuffer', function(){
+describe('Test add input data to Eventbuffer', function(){
   var falkonry = null;
   var eventbuffers = [];
 
