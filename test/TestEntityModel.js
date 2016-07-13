@@ -38,12 +38,10 @@ describe('Test entity model validation', function(){
     pipeline.setName('Motor Health')
         .setEventbuffer('eventbuffer-id')
         .setInputSignals(signals)
-        .setThingName('Motor')
         .setAssessment(assessment);
 
     assert.equal(pipeline.getName(), 'Motor Health', 'Invalid name');
     assert.equal(pipeline.getEventbuffer(), 'eventbuffer-id', 'Invalid eventbuffer');
-    assert.equal(pipeline.getThingName(), 'Motor', 'Invalid thing name');
     assert.equal(pipeline.getInputSignals().length, 3, 'Invalid input signals');
     assert.equal(pipeline.getAssessments().length, 1, 'Invalid assessment signals');
 

@@ -15,7 +15,7 @@ var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
-var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0'; //auth token
+var token    = 'gryw3nodrijv449p67uw2hxtwezr19sm'; //auth token
 
 /*
  * Test to create Eventbuffer for following cases :
@@ -49,6 +49,9 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(response.getName(), eventbuffer.getName(), 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSchemaList().length, 1, 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSubscriptions()[0]["raw"]["type"], "WEBHOOK", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
+        assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
       }
       return done();
     });
@@ -72,6 +75,9 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(response.getSchemaList().length, 1, 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
         assert.equal(response.getThingIdentifier(), "thing", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSubscriptions()[0]["raw"]["type"], "WEBHOOK", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
+        assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
       }
       return done();
     });
@@ -101,6 +107,9 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(response.getSignalsDelimiter(), "_", 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSignalsLocation(), "prefix", 'Invalid Eventbuffer object after creation');
         assert.equal(response.getValueColumn(), "value", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getSubscriptions()[0]["raw"]["type"], "WEBHOOK", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
+        assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
       }
       return done();
     });
