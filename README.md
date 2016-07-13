@@ -24,7 +24,7 @@ $ npm install falkonry-js-client
     
 ## Quick Start
 
-    * To create Eventbuffer
+    * To create Eventbuffer for a single thing
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -33,9 +33,43 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eeventbuffer-01');
-
 eventbuffer.setTimeIdentifier("time");
 eventbuffer.setTimeFormat("iso_8601");
+
+return falkonry.createEventbuffer(eventbuffer, function(error, response){});
+```
+
+    * To create Eventbuffer for Multiple Things
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var Schemas    = require('falkonry-js-client').Schemas;
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+var eventbuffer = new Schemas.Eventbuffer();
+eventbuffer.setName('Test-Eeventbuffer-01');
+eventbuffer.setTimeIdentifier("time");
+eventbuffer.setTimeFormat("iso_8601");
+eventbuffer.setThingIdentifier("motor");
+
+return falkonry.createEventbuffer(eventbuffer, function(error, response){});
+```
+
+    * To create Eventbuffer for historian data
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var Schemas    = require('falkonry-js-client').Schemas;
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+var eventbuffer = new Schemas.Eventbuffer();
+eventbuffer.setName('Test-EB-'+Math.random());
+eventbuffer.setTimeIdentifier("time");
+eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+eventbuffer.setSignalsTagField("tag");
+eventbuffer.setSignalsDelimiter("_");
+eventbuffer.setSignalsLocation("prefix");
+eventbuffer.setValueColumn("value");
 
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
@@ -79,7 +113,6 @@ return falkonry.createEventbuffer(eventbuffer, function(error, response){
         pipeline.setName('Pipeline-01')
             .setEventbuffer(eventbuffer_id)
             .setInputSignals(signals)
-            .setThingName('Motor')
             .setAssessment(assessment);
         return falkonry.createPipeline(pipeline, function(error, response){});
     });
@@ -179,9 +212,7 @@ var subscription = new Schemas.Subscription()
     .setPath('mqtt://test.mosquito.com')
     .setTopic('falkonry-eb-1-test')
     .setUsername('test-user')
-    .setPassword('test')
-    .setTimeFormat('YYYY-MM-DD HH:mm:ss')
-    .setTimeIdentifier('time');
+    .setPassword('test');
 
 return falkonry.createSubscription('eventbuffer_id', subscription, function(error, response){});
 ```
