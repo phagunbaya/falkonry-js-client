@@ -232,7 +232,7 @@ describe.skip('Test Eventbuffer Creation', function(){
     });
   });
 
-  it('Should create Eventbuffer with mqtt subscription for historian data', function(done){
+  it('Should create Eventbuffer with mqtt subscription for narrow format data', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -257,7 +257,6 @@ describe.skip('Test Eventbuffer Creation', function(){
             .setPassword('test')
             .setTimeFormat('YYYY-MM-DD HH:mm:ss')
             .setTimeIdentifier('time')
-            .setHistorian(true)
             .setValueColumn('value')
             .setSignalsDelimiter('_')
             .setSignalsTagField('tag')
@@ -277,7 +276,6 @@ describe.skip('Test Eventbuffer Creation', function(){
             assert.equal(response.getSignalsDelimiter(), subscription.getSignalsDelimiter(), 'Invalid Subscription object after creation');
             assert.equal(response.getSignalsLocation(), subscription.getSignalsLocation(), 'Invalid Subscription object after creation');
             assert.equal(response.getValueColumn(), subscription.getValueColumn(), 'Invalid Subscription object after creation');
-            assert.equal(response.getHistorian(), subscription.getHistorian(), 'Invalid Subscription object after creation');
             assert.equal(response.getSignalsTagField(), subscription.getSignalsTagField(), 'Invalid Subscription object after creation');
           }
           return done();
