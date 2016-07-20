@@ -15,7 +15,7 @@ var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
-var token    = 'g7p1bj362pk8s9qlrna7kgpzt467nxcq'; //auth token
+var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0'; //auth token
 
 /*
  * Test to add data to a Eventbuffer
@@ -34,12 +34,9 @@ describe.skip('Test add input data to Eventbuffer', function(){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
