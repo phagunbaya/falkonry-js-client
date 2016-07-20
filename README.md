@@ -55,7 +55,7 @@ eventbuffer.setThingIdentifier("motor");
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
 
-    * To create Eventbuffer for historian data
+    * To create Eventbuffer for narrow format data
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;

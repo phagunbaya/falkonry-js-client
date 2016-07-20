@@ -83,7 +83,7 @@ describe.skip('Test Eventbuffer Creation', function(){
     });
   });
 
-  it('Should create Eventbuffer for Historian', function(done){
+  it('Should create Eventbuffer for narrow format data', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
