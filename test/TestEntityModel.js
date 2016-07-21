@@ -38,12 +38,10 @@ describe('Test entity model validation', function(){
     pipeline.setName('Motor Health')
         .setEventbuffer('eventbuffer-id')
         .setInputSignals(signals)
-        .setThingName('Motor')
         .setAssessment(assessment);
 
     assert.equal(pipeline.getName(), 'Motor Health', 'Invalid name');
     assert.equal(pipeline.getEventbuffer(), 'eventbuffer-id', 'Invalid eventbuffer');
-    assert.equal(pipeline.getThingName(), 'Motor', 'Invalid thing name');
     assert.equal(pipeline.getInputSignals().length, 3, 'Invalid input signals');
     assert.equal(pipeline.getAssessments().length, 1, 'Invalid assessment signals');
 
@@ -64,12 +62,10 @@ describe('Test entity model validation', function(){
     pipeline.setName('Motor Health')
         .setEventbuffer('eventbuffer-id')
         .setInputSignals(signals)
-        .setThingIdentifier('motors')
         .setAssessment(assessment);
 
     assert.equal(pipeline.getName(), 'Motor Health', 'Invalid name');
     assert.equal(pipeline.getEventbuffer(), 'eventbuffer-id', 'Invalid eventbuffer');
-    assert.equal(pipeline.getThingIdentifier(), 'motors', 'Invalid thing identifier');
     assert.equal(pipeline.getInputSignals().length, 3, 'Invalid input signals');
     assert.equal(pipeline.getAssessments().length, 1, 'Invalid assessment signals');
 
@@ -108,16 +104,12 @@ describe('Test entity model validation', function(){
         .setPath('mqtt://test.mosquito.com')
         .setTopic('falkonry-eb-1-test')
         .setUsername('test-user')
-        .setPassword('test')
-        .setTimeFormat('YYYY-MM-DD HH:mm:ss')
-        .setTimeIdentifier('time');
+        .setPassword('test');
 
     assert.equal(subscription.getType(), 'MQTT', 'Invalid type');
     assert.equal(subscription.getTopic(), 'falkonry-eb-1-test', 'Invalid type');
     assert.equal(subscription.getPath(), 'mqtt://test.mosquito.com', 'Invalid type');
     assert.equal(subscription.getUsername(), 'test-user', 'Invalid type');
-    assert.equal(subscription.getTimeFormat(), 'YYYY-MM-DD HH:mm:ss', 'Invalid type');
-    assert.equal(subscription.getTimeIdentifier(), 'time', 'Invalid type');
     return done();
   });
 

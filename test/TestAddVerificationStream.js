@@ -16,7 +16,7 @@ var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
-var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l';
+var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0';
 
 describe.skip("Test add verification data from stream to Pipeline", function(){
   var falkonry = null;
@@ -29,110 +29,117 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
 	});
 
 	it("should add verification csv data", function(done){
-		var eventbuffer = new Schemas.Eventbuffer();
-		eventbuffer.setName('Test-EB-'+Math.random());
-		var options = {
-      		'timeIdentifier' : 'time',
-      	  'timeFormat'     : 'iso_8601'
-    	};
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error,null,"Error creating Eventbuffer" + JSON.stringify(error));
-
-      if(!error){
-        eventbuffers.push(response);
-
-        var pipeline = new Schemas.Pipeline();
-        var signals = {
-          'current'   : 'Numeric',
-          'vibration' : 'Numeric',
-          'state'     : 'Categorical'
-        };
-        var assessment = new Schemas.Assessment();
-        assessment.setName('Health')
-            .setInputSignals(['current', 'vibration', 'state']);
-
-        pipeline.setName('Pipeline-'+Math.random())
-            .setEventbuffer(response.getId())
-            .setInputSignals(signals)
-            .setThingName('Motor')
-            .setAssessment(assessment)
-            .setInterval(null, "PT1S");
-            
-        return falkonry.createPipeline(pipeline, function(error,response){
-          assert.equal(error, null, "Error creating Pipeline " + JSON.stringify(error));
-
-          if(!error){
-            pipelines.push(response);
-
-            var data = fs.createReadStream(__dirname+'/resources/verificationData.csv');
-            return falkonry.addVerificationFromStream(response.getId(), 'csv', data, null, function(error,response){
-              assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
-              if(!error) {
-                assert.equal(JSON.stringify(response),'{"message":"Data submitted successfully"}',"Error adding verification");
-              }
-              return done();
-            });
-          }
-          else{
-            return done();
-          }
-        });    
-      }
-    });  
-	});
-
-  it("should add verification JSON data", function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
-    var options = {
-          'timeIdentifier' : 'time',
-          'timeFormat'     : 'iso_8601'
-      };
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error,null,"Error creating Eventbuffer" + JSON.stringify(error));
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
+      assert.equal(error,null,"Error creating Eventbuffer" + error);
 
       if(!error){
         eventbuffers.push(response);
-
-        var pipeline = new Schemas.Pipeline();
-        var signals = {
-          'current'   : 'Numeric',
-          'vibration' : 'Numeric',
-          'state'     : 'Categorical'
-        };
-        var assessment = new Schemas.Assessment();
-        assessment.setName('Health')
-            .setInputSignals(['current', 'vibration', 'state']);
-
-        pipeline.setName('Pipeline-'+Math.random())
-            .setEventbuffer(response.getId())
-            .setInputSignals(signals)
-            .setThingName('Motor')
-            .setAssessment(assessment)
-            .setInterval(null, "PT1S");
-            
-        return falkonry.createPipeline(pipeline, function(error,response){
-          assert.equal(error, null, "Error creating Pipeline " + JSON.stringify(error));
-
+        var eventbuffer_id = response.getId();
+        var data = "time, current, vibration, state\n" + "2016-03-01 01:01:01, 12.4, 3.4, On";
+        return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
           if(!error){
-            pipelines.push(response);
+            var pipeline = new Schemas.Pipeline();
+            var signals = {
+              'current'   : 'Numeric', 
+              'vibration' : 'Numeric',
+              'state'     : 'Categorical'
+            };
+            var assessment = new Schemas.Assessment();
+            assessment.setName('Health')
+                .setInputSignals(['current', 'vibration', 'state']);
 
-            var data = fs.createReadStream(__dirname+'/resources/verificationData.json');
-            return falkonry.addVerificationFromStream(response.getId(), 'json', data, null, function(error,response){
-              assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
-              if(!error) {
-                assert.equal(response.length,2,"Error adding verification");
-                //2 is the number of rows in the file
+            pipeline.setName('Pipeline-'+Math.random())
+                .setEventbuffer(eventbuffer_id)
+                .setInputSignals(signals)
+                .setAssessment(assessment)
+                .setInterval(null, "PT1S");
+                
+            return falkonry.createPipeline(pipeline, function(error,response){
+              assert.equal(error, null, "Error creating Pipeline " + error);
+
+              if(!error){
+                pipelines.push(response);
+
+                var data = fs.createReadStream(__dirname+'/resources/verificationData.csv');
+            return falkonry.addVerificationFromStream(response.getId(), 'csv', data, null, function(error,response){
+                  assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
+                  if(!error) {
+                    assert.equal(JSON.stringify(response),'{"message":"Data submitted successfully"}',"Error adding verification");
+                  }
+                  return done();
+                });
               }
-              return done();
-            });
+              else{
+                return done();
+              }
+            });    
           }
-          else{
-            return done();
-          }
-        });    
+          return done();
+        });  
       }
-    });  
+      return done();
+    })
+  });
+
+  it("should add verification json data", function(done){
+    var eventbuffer = new Schemas.Eventbuffer();
+    eventbuffer.setName('Test-EB-'+Math.random());
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("iso_8601");
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
+      assert.equal(error,null,"Error creating Eventbuffer" + error);
+
+      if(!error){
+        eventbuffers.push(response);
+        var eventbuffer_id = response.getId();
+        var data = "time, current, vibration, state\n" + "2016-03-01 01:01:01, 12.4, 3.4, On";
+        return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
+          if(!error){
+            var pipeline = new Schemas.Pipeline();
+            var signals = {
+              'current'   : 'Numeric', 
+              'vibration' : 'Numeric',
+              'state'     : 'Categorical'
+            };
+            var assessment = new Schemas.Assessment();
+            assessment.setName('Health')
+                .setInputSignals(['current', 'vibration', 'state']);
+
+            pipeline.setName('Pipeline-'+Math.random())
+                .setEventbuffer(eventbuffer_id)
+                .setInputSignals(signals)
+                .setAssessment(assessment)
+                .setInterval(null, "PT1S");
+                
+            return falkonry.createPipeline(pipeline, function(error,response){
+              assert.equal(error, null, "Error creating Pipeline " + error);
+
+              if(!error){
+                pipelines.push(response);
+
+                var data = fs.createReadStream(__dirname+'/resources/verificationData.json');
+            return falkonry.addVerificationFromStream(response.getId(), 'json', data, null, function(error,response){
+                  assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
+                  if(!error) {
+                    assert.equal(response.length,2,"Error adding verification");
+                  }
+                  return done();
+                });
+              }
+              else{
+                return done();
+              }
+            });    
+          }
+          return done();
+        });  
+      }
+      return done();
+    })
   });  
 
   after(function(done){
