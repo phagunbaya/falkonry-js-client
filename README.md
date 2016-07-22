@@ -5,6 +5,8 @@
 
 Falkonry Javascript Client to access [Falkonry Condition Prediction](falkonry.com) APIs
 
+[Releases](https://github.com/Falkonry/falkonry-js-client/releases)
+
 ## Installation
 
 ```bash
