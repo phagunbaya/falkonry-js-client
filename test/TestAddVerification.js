@@ -14,10 +14,10 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0';
+var host     = 'http://192.168.1.202:8080';
+var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7';
 
-describe.skip("Test add verification data to Pipeline", function(){
+describe("Test add verification data to Pipeline", function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
@@ -28,6 +28,9 @@ describe.skip("Test add verification data to Pipeline", function(){
 	});
 
   it("should add verification csv data", function(done){
+    this.timeout(4000);
+    setTimeout(done, 4000);
+
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");

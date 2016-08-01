@@ -15,14 +15,14 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l';//auth token
+var host     = 'http://192.168.1.202:8080';
+var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7';
 
 /*
  * Test to add data stream to a Pipeline
  */
 
-describe.skip('Test add input data stream to Pipeline', function(){
+describe('Test add input data stream to Pipeline', function(){
   var falkonry = null;
   var eventbuffers = [];
 
@@ -63,12 +63,10 @@ describe.skip('Test add input data stream to Pipeline', function(){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
 
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {
@@ -93,17 +91,15 @@ describe.skip('Test add input data stream to Pipeline', function(){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
 
     //create event buffer and add a subscription
     var options = {
       'subscription' : '<subscription-id>'
     };
     var data = fs.createReadStream(__dirname+'/resources/inputData.csv');
-    return falkonry.addInputFromStream('<eventbuffer-id>', 'csv', data, options, function(error, response){
+    return falkonry.addInputFromStream( '<eventbuffer-id>', 'csv', data, options, function(error, response){
       assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
 
       if(!error) {

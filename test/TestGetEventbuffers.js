@@ -14,14 +14,14 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
+var host     = 'http://192.168.1.202:8080';
+var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7'; //auth token
 
 /*
  * Test to get Eventbuffers for an account
  */
 
-describe.skip('Test fetch Eventbuffers', function(){
+describe('Test fetch Eventbuffers', function(){
   var falkonry = null;
   var eventbuffers = [];
 
@@ -33,13 +33,10 @@ describe.skip('Test fetch Eventbuffers', function(){
   it('Get all eventbuffers', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
 
       if(!error) {

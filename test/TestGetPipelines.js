@@ -14,14 +14,14 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://localhost:8080';
-var token    = 'b7f4sc9dcaklj6vhcy50otx41p044s6l'; //auth token
+var host     = 'http://192.168.1.202:8080';
+var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7'; //auth token
 
 /*
  * Test to get Pipelines for an account
  */
 
-describe.skip('Test fetch Pipelines', function(){
+describe('Test fetch Pipelines', function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
@@ -34,17 +34,24 @@ describe.skip('Test fetch Pipelines', function(){
   it('Get all Pipelines', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
+    eventbuffer.setTimeIdentifier("time");
+    eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
 
-    var options = {
-      'timeIdentifier' : 'time',
-      'timeFormat'     : 'iso_8601'
-    };
-
-    return falkonry.createEventbuffer(eventbuffer, options, function(error, response){
-      assert.equal(error, null, 'Error creating Eventbuffer');
+    return falkonry.createEventbuffer(eventbuffer, function(error, response){
+      assert.equal(error, null, 'Error creating Eventbuffer' + error);
 
       if(!error) {
         eventbuffers.push(response);
+        var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+        return falkonry.addInput(response.getId(), 'json', data, null, function(error, response){
+          assert.equal(error, null, 'Error adding input data to Eventbuffer: '+error);
+
+          if(!error) {
+            assert.equal(typeof response.__$id, 'string', 'Cannot add input data to Pipeline');
+          }
+          return done();
+        });
+
 
         var pipeline = new Schemas.Pipeline();
         var signals  = {
@@ -59,7 +66,6 @@ describe.skip('Test fetch Pipelines', function(){
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
-            .setThingName('Motor')
             .setAssessment(assessment)
             .setInterval(null,"PT1S");
 
