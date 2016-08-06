@@ -16,7 +16,7 @@ var Falkonry = require('../').Client;
 var Events   = require('events');
 var host     = 'http://dev.falkonry.io';
 var token    = 'dg5th0r2rj4rywg3rv90egu3krswpw50';
-var pipeline = 'tu4tfecsafdoi1'; //Pipeline id
+var pipeline = 'auvkkw8boml4l2'; //Pipeline id
 var updateNotifier;
 var runnerID;
 
@@ -58,7 +58,8 @@ describe('Test get output of a Pipeline', function(){
     it('Should end output stream', function(done){
         this.timeout(3600000);
         setTimeout(done, 3600000);
-        return updateNotifier.close();
+        updateNotifier.close;
+        return done;
     });
 
     after(function(done){
