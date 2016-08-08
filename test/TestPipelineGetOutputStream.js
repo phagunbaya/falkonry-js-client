@@ -38,7 +38,7 @@ describe('Test get output of a Pipeline', function(){
         setTimeout(done, 3600000);
 
         var start = "123456";
-
+        var count = 0;
         return falkonry.streamOutput(pipeline, start, function (error, notifier) {
             assert.equal(error, null, 'Error getting output stream'  + error);
 
@@ -46,20 +46,17 @@ describe('Test get output of a Pipeline', function(){
                 updateNotifier = notifier;
                 updateNotifier.on('data', function (data) {
                     console.log(data);
+                    count += 1;
+                    if(count == 5) {
+                        return updateNotifier.close();
+                    }
                 });
                 updateNotifier.on('error', function (error) {
-                    console.log("Error : " + error);
+                    updateNotifier.close();
                     return done;
                 })
             }
         });
-    });
-
-    it('Should end output stream', function(done){
-        this.timeout(3600000);
-        setTimeout(done, 3600000);
-        updateNotifier.close;
-        return done;
     });
 
     after(function(done){
