@@ -23,56 +23,125 @@ $ npm install falkonry-js-client
     * Retrieve output of Pipeline
     * Create/update/delete subscription for Eventbuffer
     * Create/update/delete publication for Pipeline
-    
+
 ## Quick Start
+```
+* Get auth token from Falkonry Service UI
+* Read the examples provided for integratioin with various data formats
+```
 
-    * To create Eventbuffer for a single thing
+## Examples 
+
+    * To create an Eventbuffer for a single thing
+
+Data :
+
+```
+json data :
+
+{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}
+{"time" :"2016-04-01 07:01:01", "current" : 0.4, "vibration" : 4.9, "state" : "Off"}
+
+or
+
+csv data : 
+
+time,current,vibration,state
+2016-03-01 01:01:01,12.4,3.4,On
+2016-03-01 01:01:02,11.3,2.2,On
+
+```
+
+Usage :
+
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var Schemas    = require('falkonry-js-client').Schemas;
+
+//instantiate Falkonry
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token'); 
+
+var eventbuffer = new Schemas.Eventbuffer();    
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+
+//create eventbuffer
+falkonry.createEventbuffer(eventbuffer, function(error, response){});
+
+//add data to Eventbuffer
+var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+var options = null
+
+return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
+```
+
+    * To add json data to Eventbuffer
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+
+//instantiate Falkonry
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+//add input data
+var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+var options = null
+return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
+```
+
+    * To add csv data to Eventbuffer
+    
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+
+//instantiate Falkonry
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+//add input data 
+var data = 'time,current,vibration,state\n2016-03-01 01:01:01,12.4,3.4,On';
+var options = null
+return falkonry.addInput('eventbufferId', 'csv', data, options, function(error, response){});
+```
+
+    * To create an Eventbuffer for Multiple Things
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var Schemas    = require('falkonry-js-client').Schemas;
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
-var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');
-eventbuffer.setTimeIdentifier("time");
-eventbuffer.setTimeFormat("iso_8601");
+//instantiate Falkonry
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token'); 
 
+var eventbuffer = new Schemas.Eventbuffer();    
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setThingIdentifier("motor");        //set property to identify thing in the data
+
+//create and return Eventbuffer
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
 
-    * To create Eventbuffer for Multiple Things
+    * To create an Eventbuffer for narrow format data
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var Schemas    = require('falkonry-js-client').Schemas;
+
+//instantiate Falkonry
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');
-eventbuffer.setTimeIdentifier("time");
-eventbuffer.setTimeFormat("iso_8601");
-eventbuffer.setThingIdentifier("motor");
-
-return falkonry.createEventbuffer(eventbuffer, function(error, response){});
-```
-
-    * To create Eventbuffer for narrow format data
-    
-```js
-var Falkonry   = require('falkonry-js-client').Client;
-var Schemas    = require('falkonry-js-client').Schemas;
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-
-var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-EB-'+Math.random());
-eventbuffer.setTimeIdentifier("time");
-eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
-eventbuffer.setSignalsTagField("tag");
-eventbuffer.setSignalsDelimiter("_");
-eventbuffer.setSignalsLocation("prefix");
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
+eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
+eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
 eventbuffer.setValueColumn("value");
 
+//create and return Eventbuffer
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
 
@@ -80,8 +149,11 @@ return falkonry.createEventbuffer(eventbuffer, function(error, response){});
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
+
+//instantiate Falkonry
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
         
+//return a list of the Eventbuffers
 falkonry.getEventbuffers(function(error, pipelines){});
 ```
 
@@ -90,32 +162,38 @@ falkonry.getEventbuffers(function(error, pipelines){});
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var Schemas    = require('falkonry-js-client').Schemas;
+
+//instantiate Falkonry
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');
-eventbuffer.setTimeIdentifier("time");
-eventbuffer.setTimeFormat("iso_8601");
-eventbuffer.setThingIdentifier("motor");
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setThingIdentifier("motor");        //set property to identify thing in the data
 
 return falkonry.createEventbuffer(eventbuffer, function(error, response){
+
+    //adding Data to the Eventbuffer
     var data = "time, motor, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
     var eventbuffer_id = response.getId();
     return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
+        
+        //creating a Pipeline from the Eventbuffer
         var pipeline = new Schemas.Pipeline();
-        var signals  = {
-        'current'   : ['Numeric', 'Samples'],
+        var signals  = {                                        //signals present in the Eventbuffer
+        'current'   : ['Numeric', 'Samples'],                       
         'vibration' : 'Numeric', // default eventType is 'Samples'
         'state'     : ['Categorical', 'Occurrences']
-        };
-        var assessment = new Schemas.Assessment();
-        assessment.setName('Health')
-            .setInputSignals(['current', 'vibration', 'state']);
+        };      
+        var assessment = new Schemas.Assessment();              //add an Assessment to the Pipeline
+        assessment.setName('Health')                            //set name for the Assessment
+            .setInputSignals(['current', 'vibration', 'state']);//add input signals to the Assessment
 
-        pipeline.setName('Pipeline-01')
-            .setEventbuffer(eventbuffer_id)
-            .setInputSignals(signals)
-            .setAssessment(assessment);
+        pipeline.setName('Pipeline-01')                         //set Pipeline name
+            .setEventbuffer(eventbuffer_id)                     //select Eventbuffer for the Pipeline
+            .setInputSignals(signals)                           //add list of signals for the Pipeline
+            .setAssessment(assessment);                         //select list of Assessments for the Pipeline
         return falkonry.createPipeline(pipeline, function(error, response){});
     });
 });
@@ -130,32 +208,12 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 falkonry.getPipelines(function(error, pipelines){});
 ```
 
-    * To add json data to Eventbuffer
-    
-```js
-var Falkonry   = require('falkonry-js-client').Client;
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
-var options = null
-return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
-```
-
-    * To add csv data to Eventbuffer
-    
-```js
-var Falkonry   = require('falkonry-js-client').Client;
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-var data = 'time,current,vibration,state\n2016-03-01 01:01:01,12.4,3.4,On';
-var options = null
-return falkonry.addInput('eventbufferId', 'csv', data, options, function(error, response){});
-```
-
     * To add data from a stream to Eventbuffer
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
-var stream   = fs.createReadStream('/tmp/sample.json');
+var stream   = fs.createReadStream('/tmp/sample.json');         //use *.csv for csv data
 var options = null
 var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, options, function(error, response){});
 ```
@@ -194,10 +252,12 @@ var streamHandler = falkonry.addVerificationFromStream('pipelineid', 'json', str
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
+
+//instantiate Falkonry
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
 var stream   = fs.createReadStream('/tmp/sample.json');
-var startTime = '1457018017'; //seconds since unix epoch 
-var endTime   = '1457028017'; //seconds since unix epoch
+var startTime = '1457018017';               //seconds since unix epoch 
+var endTime   = '1457028017';               //seconds since unix epoch
 var streamHandler = falkonry.getOutput('pipeline_id', startTime, endTime, function(error, stream){
     stream.pipe(fs.createWriteStream('/tmp/pipeline_output.json'));
 });
@@ -208,14 +268,17 @@ var streamHandler = falkonry.getOutput('pipeline_id', startTime, endTime, functi
 ```js
 var Falkonry = require('falkonry-js-client').Client;
 var Schemas  = require('falkonry-js-client').Schemas;
+
+//instantiate Falkonry
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
 var subscription = new Schemas.Subscription()
-    .setType('MQTT')
-    .setPath('mqtt://test.mosquito.com')
-    .setTopic('falkonry-eb-1-test')
-    .setUsername('test-user')
-    .setPassword('test');
+    .setType('MQTT')                        //set type of Subscription
+    .setPath('mqtt://test.mosquito.com')    //set host url for Mosquitto broker
+    .setTopic('falkonry-eb-1-test')         //set topic to subscribe
+    .setUsername('test-user')               //optional property
+    .setPassword('test');                   //optional property
 
+//create and return Subscription
 return falkonry.createSubscription('eventbuffer_id', subscription, function(error, response){});
 ```
 
@@ -227,12 +290,14 @@ var Falkonry = require('falkonry-js-client').Client;
 var Schemas  = require('falkonry-js-client').Schemas;
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
 var publication = new Schemas.Publication()
-    .setType('MQTT')
-    .setTopic('falkonry-test-pipeline')
-    .setPath('mqtt://test.mosquito.com')
-    .setUsername('test-user')
-    .setPassword('test-password')
-    .setContentType('application/json');
+    .setType('MQTT')                        //set type of Subscription
+    .setPath('mqtt://test.mosquito.com')    //set host url for Mosquitto broker
+    .setTopic('falkonry-eb-1-test')         //set topic to subscribe
+    .setUsername('test-user')               //optional property
+    .setPassword('test');                   //optional property
+    .setContentType('application/json');    //set format of output
+    
+//create and return a Publication
 return falkonry.createPublication('pipeline_id', publication, function(error, response){});
 ```
 

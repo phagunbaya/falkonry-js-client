@@ -14,7 +14,7 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://192.168.1.202:8080';
+var host     = 'http://192.168.1.20git 2:8080';
 var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7'; //auth token
 
 /*
@@ -176,7 +176,6 @@ describe('Test Eventbuffer Creation', function(){
           if(!error) {
             assert.equal(typeof response, 'object', 'Invalid Subscription object after creation');
             assert.equal(typeof response.getKey(), 'string', 'Invalid Subscription object after creation');
-            //assert.equal(response.getType(), 'PIPELINEOUTFLOW', 'Invalid Subscription object after creation');
             assert.equal(response.getPath(), subscription.getPath(), 'Invalid Subscription object after creation');
             assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
             assert.equal(response.getTimeFormat(), "millis", 'Invalid Subscription object after creation');
