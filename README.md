@@ -32,24 +32,19 @@ $ npm install falkonry-js-client
 
 ## Examples 
 
-    * To create an Eventbuffer for a single thing
+    * To create an Eventbuffer with wide format data
 
 Data :
 
 ```
-json data :
-
 {"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}
 {"time" :"2016-04-01 07:01:01", "current" : 0.4, "vibration" : 4.9, "state" : "Off"}
 
 or
 
-csv data : 
-
 time,current,vibration,state
 2016-03-01 01:01:01,12.4,3.4,On
 2016-03-01 01:01:02,11.3,2.2,On
-
 ```
 
 Usage :
@@ -72,12 +67,30 @@ falkonry.createEventbuffer(eventbuffer, function(error, response){});
 //add data to Eventbuffer
 var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
 var options = null
-
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
 
-    * To add json data to Eventbuffer
+    * To create an Eventbuffer with narrow/historian format data
     
+Data :
+
+```
+{"time" :"2016-03-01 01:01:01", "tag" : "signal1_thing1", "value" : 3.4}
+{"time" :"2016-03-01 01:01:01", "tag" : "signal2_thing1", "value" : 1.4}
+{"time" :"2016-03-01 01:01:02", "tag" : "signal1_thing2", "value" : 9.3}
+{"time" :"2016-03-01 01:01:02", "tag" : "signal2_thing2", "value" : 4.3}
+
+or
+
+time, tag, value
+2016-03-01 01:01:01, signal1_thing1, 3.4
+2016-03-01 01:01:01, signal2_thing1, 1.4
+2016-03-01 01:01:02, signal1_thing2, 9.3
+2016-03-01 01:01:02, signal2_thing2, 4.3
+```
+
+Usage :
+
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 
@@ -85,23 +98,34 @@ var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 //add input data
-var data = '{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}';
+String data = "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal1_thing1\", \"value\" : 3.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal2_thing1\", \"value\" : 1.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal1_thing1\", \"value\" : 9.3}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal2_thing2\", \"value\" : 4.3}";
 var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
 
-    * To add csv data to Eventbuffer
+    * To create an Eventbuffer for narrow format data
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
+var Schemas    = require('falkonry-js-client').Schemas;
 
 //instantiate Falkonry
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
-//add input data 
-var data = 'time,current,vibration,state\n2016-03-01 01:01:01,12.4,3.4,On';
-var options = null
-return falkonry.addInput('eventbufferId', 'csv', data, options, function(error, response){});
+var eventbuffer = new Schemas.Eventbuffer();
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
+eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
+eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
+eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
+
+//create and return Eventbuffer
+return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
 
     * To create an Eventbuffer for Multiple Things
@@ -122,29 +146,7 @@ eventbuffer.setThingIdentifier("motor");        //set property to identify thing
 //create and return Eventbuffer
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
-
-    * To create an Eventbuffer for narrow format data
     
-```js
-var Falkonry   = require('falkonry-js-client').Client;
-var Schemas    = require('falkonry-js-client').Schemas;
-
-//instantiate Falkonry
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-
-var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
-eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
-eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
-eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
-eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
-eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
-eventbuffer.setValueColumn("value");
-
-//create and return Eventbuffer
-return falkonry.createEventbuffer(eventbuffer, function(error, response){});
-```
-
     * To get all Eventbuffers
     
 ```js
@@ -232,7 +234,10 @@ return falkonry.addVerification('pipelineId', 'json', data, options, function(er
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+//instantiate Falkonry
+var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
+
 var data = "time,end,car,Health\n2011-03-31T00:00:00Z,2011-04-01T00:00:00Z,IL9753,Normal\n2011-03-31T00:00:00Z,2011-04-01T00:00:00Z,HI3821,Normal";
 var options = null
 return falkonry.addInput('pipelineId', 'csv', data, options, function(error, response){});
@@ -242,7 +247,10 @@ return falkonry.addInput('pipelineId', 'csv', data, options, function(error, res
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
+
+//instantiate Falkonry
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
+
 var stream   = fs.createReadStream('/tmp/sample.json');
 var options = null
 var streamHandler = falkonry.addVerificationFromStream('pipelineid', 'json', stream, options, function(error, response){});

@@ -14,7 +14,7 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://192.168.1.202:8080';
+var host     = 'http://dev.falkonry.io';
 var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7';
 /*
  * Test to add data to a Eventbuffer
