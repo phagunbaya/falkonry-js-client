@@ -1,7 +1,7 @@
 'use strict';
 
-var host = 'http://192.168.1.202:8080';
-var token = 'wluja163da0f8a3451mhyyqrtsuclvb7';
+var host     = 'http://localhost:8080';
+var token    = '';                      //auth token
 
 var falkonry = new Falkonry(host, token);
 

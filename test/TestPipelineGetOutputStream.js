@@ -14,9 +14,9 @@ var fs       = require('fs');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Events   = require('events');
-var host     = 'http://dev.falkonry.io';
-var token    = 'dg5th0r2rj4rywg3rv90egu3krswpw50';
-var pipeline = 'auvkkw8boml4l2'; //Pipeline id
+var host     = 'http://localhost:8080';
+var token    = '';                      //auth token
+var pipeline = '';                      //Pipeline id
 var updateNotifier;
 var runnerID;
 
@@ -38,7 +38,7 @@ describe('Test get output of a Pipeline', function(){
         setTimeout(done, 3600000);
 
         var start = "123456";
-        var count = 0;
+        var streamCount = 0;                //update counter for test case only
         return falkonry.streamOutput(pipeline, start, function (error, notifier) {
             assert.equal(error, null, 'Error getting output stream'  + error);
 
@@ -46,8 +46,8 @@ describe('Test get output of a Pipeline', function(){
                 updateNotifier = notifier;
                 updateNotifier.on('data', function (data) {
                     console.log(data);
-                    count += 1;
-                    if(count == 5) {
+                    streamCount += 1;       //streamCount ends streaming after retrieving five updates
+                    if(streamCount == 5) {
                         return updateNotifier.close();
                     }
                 });

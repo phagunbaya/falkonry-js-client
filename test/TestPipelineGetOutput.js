@@ -13,9 +13,9 @@
 var fs       = require('fs');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
-var host     = 'http://192.168.1.202:8080';
-var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7';
-var pipeline = 'nzqnyhqcgdx8dx'; //Pipeline id
+var host     = 'http://localhost:8080';
+var token    = '';                      //auth token
+var pipeline = ''; //Pipeline id
 
 /*
  * Test to get output of a Pipeline

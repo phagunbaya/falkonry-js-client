@@ -14,8 +14,8 @@ var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
-var host     = 'http://192.168.1.202:8080';
-var token    = 'wluja163da0f8a3451mhyyqrtsuclvb7'; //auth token
+var host     = 'http://localhost:8080';
+var token    = '';                      //auth token
 
 /*
  * Test to create Publication for a Pipeline of type :

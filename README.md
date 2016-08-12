@@ -32,19 +32,111 @@ $ npm install falkonry-js-client
 
 ## Examples 
 
-    * To create an Eventbuffer with wide format data
+#### Setup Eventbuffer for narrow/historian style data from a single thing
+
+Data:
+```
+    {"time" :"2016-03-01 01:01:01", "tag" : "signal1", "value" : 3.4}
+    {"time" :"2016-03-01 01:01:02", "tag" : "signal2", "value" : 9.3}
+
+    or
+
+    time, tag, value
+    2016-03-01 01:01:01, signal1, 3.4
+    2016-03-01 01:01:02, signal2, 9.3
+
+```
+
+Usage:
+
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var Schemas    = require('falkonry-js-client').Schemas;
+
+//instantiate Falkonry
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+var eventbuffer = new Schemas.Eventbuffer();
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
+eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
+eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
+eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
+
+//create Eventbuffer
+falkonry.createEventbuffer(eventbuffer, function(error, response){});
+
+//add data to Eventbuffer
+String data = "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal1\", \"value\" : 3.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal2\", \"value\" : 9.3}";
+var options = null
+return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
+```
+
+#### Setup Eventbuffer for narrow/historian style data from multiple things
+
+Data:
+
+```
+    {"time" :"2016-03-01 01:01:01", "tag" : "signal1_thing1", "value" : 3.4}
+    {"time" :"2016-03-01 01:01:01", "tag" : "signal2_thing1", "value" : 1.4}
+    {"time" :"2016-03-01 01:01:02", "tag" : "signal1_thing2", "value" : 9.3}
+    {"time" :"2016-03-01 01:01:02", "tag" : "signal2_thing2", "value" : 4.3}
+
+    or
+
+    time, tag, value
+    2016-03-01 01:01:01, signal1_thing1, 3.4
+    2016-03-01 01:01:01, signal2_thing1, 1.4
+    2016-03-01 01:01:02, signal1_thing2, 9.3
+    2016-03-01 01:01:02, signal2_thing2, 4.3
+```
+
+Usage:
+
+```js
+var Falkonry   = require('falkonry-js-client').Client;
+var Schemas    = require('falkonry-js-client').Schemas;
+
+//instantiate Falkonry
+var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
+
+var eventbuffer = new Schemas.Eventbuffer();
+eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
+eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
+eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
+eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
+eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
+
+//create Eventbuffer
+falkonry.createEventbuffer(eventbuffer, function(error, response){});
+
+//add data to Eventbuffer
+String data = "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal1_thing1\", \"value\" : 3.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal2_thing1\", \"value\" : 1.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal1_thing1\", \"value\" : 9.3}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal2_thing2\", \"value\" : 4.3}";
+var options = null
+return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});        
+```
+
+#### Setup Eventbuffer for wide style data from a single thing
 
 Data :
 
 ```
-{"time" :"2016-03-01 01:01:01", "current" : 12.4, "vibration" : 3.4, "state" : "On"}
-{"time" :"2016-04-01 07:01:01", "current" : 0.4, "vibration" : 4.9, "state" : "Off"}
+    {"time":1467729675422, "signal1":41.11, "signal2":82.34, "signal3":74.63, "signal4":4.8}
+    {"time":1467729668919, "signal1":78.11, "signal2":2.33, "signal3":4.6, "signal4":9.8}
 
-or
+    or
 
-time,current,vibration,state
-2016-03-01 01:01:01,12.4,3.4,On
-2016-03-01 01:01:02,11.3,2.2,On
+    time, signal1, signal2, signal3, signal4
+    1467729675422, 41.11, 62.34, 77.63, 4.8
+    1467729675445, 43.91, 82.64, 73.63, 3.8
 ```
 
 Usage :
@@ -70,66 +162,23 @@ var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
 
-    * To create an Eventbuffer with narrow/historian format data
-    
+#### Setup Eventbuffer for wide style data from multiple things
+
 Data :
 
 ```
-{"time" :"2016-03-01 01:01:01", "tag" : "signal1_thing1", "value" : 3.4}
-{"time" :"2016-03-01 01:01:01", "tag" : "signal2_thing1", "value" : 1.4}
-{"time" :"2016-03-01 01:01:02", "tag" : "signal1_thing2", "value" : 9.3}
-{"time" :"2016-03-01 01:01:02", "tag" : "signal2_thing2", "value" : 4.3}
+    {"time":1467729675422, "thing": "Thing1", "signal1":41.11, "signal2":82.34, "signal3":74.63, "signal4":4.8}
+    {"time":1467729668919, "thing": "Thing2", "signal1":78.11, "signal2":2.33, "signal3":4.6, "signal4":9.8}
 
-or
+    or
 
-time, tag, value
-2016-03-01 01:01:01, signal1_thing1, 3.4
-2016-03-01 01:01:01, signal2_thing1, 1.4
-2016-03-01 01:01:02, signal1_thing2, 9.3
-2016-03-01 01:01:02, signal2_thing2, 4.3
+    time, thing, signal1, signal2, signal3, signal4
+    1467729675422, thing1, 41.11, 62.34, 77.63, 4.8
+    1467729675445, thing1, 43.91, 82.64, 73.63, 3.8
 ```
 
-Usage :
+Usage:
 
-```js
-var Falkonry   = require('falkonry-js-client').Client;
-
-//instantiate Falkonry
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-
-//add input data
-String data = "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal1_thing1\", \"value\" : 3.4}" + "\n"
-        + "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal2_thing1\", \"value\" : 1.4}" + "\n"
-        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal1_thing1\", \"value\" : 9.3}" + "\n"
-        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal2_thing2\", \"value\" : 4.3}";
-var options = null
-return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
-```
-
-    * To create an Eventbuffer for narrow format data
-    
-```js
-var Falkonry   = require('falkonry-js-client').Client;
-var Schemas    = require('falkonry-js-client').Schemas;
-
-//instantiate Falkonry
-var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
-
-var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
-eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
-eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
-eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
-eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
-eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
-eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
-
-//create and return Eventbuffer
-return falkonry.createEventbuffer(eventbuffer, function(error, response){});
-```
-
-    * To create an Eventbuffer for Multiple Things
-    
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var Schemas    = require('falkonry-js-client').Schemas;
@@ -143,11 +192,18 @@ eventbuffer.setTimeIdentifier("time");          //property that identifies time 
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
 eventbuffer.setThingIdentifier("motor");        //set property to identify thing in the data
 
-//create and return Eventbuffer
-return falkonry.createEventbuffer(eventbuffer, function(error, response){});
+//create Eventbuffer
+falkonry.createEventbuffer(eventbuffer, function(error, response){});
+
+//add data to Eventbuffer
+String data = "time, thing, signal1, signal2, signal3, signal4" + "\n"
+        + "1467729675422, thing1, 41.11, 62.34, 77.63, 4.8" + "\n"
+        + "1467729675445, thing1, 43.91, 82.64, 73.63, 3.8";
+var options = null
+return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
     
-    * To get all Eventbuffers
+#### Get an Eventbuffer
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -159,7 +215,7 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 falkonry.getEventbuffers(function(error, pipelines){});
 ```
 
-    * To create Pipeline
+#### Setup Pipeline from Eventbuffer
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -201,7 +257,7 @@ return falkonry.createEventbuffer(eventbuffer, function(error, response){
 });
 ```
 
-    * To get all Pipelines
+#### To get all Pipelines
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -210,17 +266,7 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 falkonry.getPipelines(function(error, pipelines){});
 ```
 
-    * To add data from a stream to Eventbuffer
-    
-```js
-var Falkonry = require('falkonry-js-client').Client;
-var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
-var stream   = fs.createReadStream('/tmp/sample.json');         //use *.csv for csv data
-var options = null
-var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, options, function(error, response){});
-```
-
-    * To add json verification data to Pipeline
+#### Add verification data (json format) to a Pipeline
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -230,7 +276,7 @@ var options = null
 return falkonry.addVerification('pipelineId', 'json', data, options, function(error, response){});
 ```
 
-    * To add csv verification data to Pipeline
+#### Add verification data (csv format) to a Pipeline
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -243,20 +289,27 @@ var options = null
 return falkonry.addInput('pipelineId', 'csv', data, options, function(error, response){});
 ```
 
-    * To add verification data from a stream to Pipeline
+#### Add verification data (json format) from a stream to a Pipeline
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
-
-//instantiate Falkonry
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
-
-var stream   = fs.createReadStream('/tmp/sample.json');
+var stream   = fs.createReadStream('/tmp/sample.json');         
 var options = null
-var streamHandler = falkonry.addVerificationFromStream('pipelineid', 'json', stream, options, function(error, response){});
+var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, options, function(error, response){});
 ```
 
-    * To get output of a Pipeline
+#### Add verification data (csv format) from a stream to a Pipeline
+    
+```js
+var Falkonry = require('falkonry-js-client').Client;
+var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
+var stream   = fs.createReadStream('/tmp/sample.csv');         
+var options = null
+var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'csv', stream, options, function(error, response){});
+```
+
+#### Get output of a Pipeline
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
@@ -271,8 +324,8 @@ var streamHandler = falkonry.getOutput('pipeline_id', startTime, endTime, functi
 });
 ```
 
-    * To add subscription to an Eventbuffer
-    
+#### To create and delete a subscription for an Eventbuffer
+
 ```js
 var Falkonry = require('falkonry-js-client').Client;
 var Schemas  = require('falkonry-js-client').Schemas;
@@ -288,10 +341,13 @@ var subscription = new Schemas.Subscription()
 
 //create and return Subscription
 return falkonry.createSubscription('eventbuffer_id', subscription, function(error, response){});
+
+//delete Subscription
+falkonry.deleteSubscription('eventbuffer_id', subscription, function(error, response){});
 ```
 
 
-    * To add publication to a Pipeline
+#### To create and delete a publication for a Pipeline
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
@@ -307,6 +363,9 @@ var publication = new Schemas.Publication()
     
 //create and return a Publication
 return falkonry.createPublication('pipeline_id', publication, function(error, response){});
+
+//delete Publication
+falkonry.deletePublication('pipeline_id', publication, function(error, response){});
 ```
 
 ## Docs
