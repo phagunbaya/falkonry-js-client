@@ -25,7 +25,7 @@ var runnerID;
  * and pipe it to a writable file stream
  */
 
-describe('Test get output of a Pipeline', function(){
+describe.skip('Test get output of a Pipeline', function(){
     var falkonry = null;
 
     before(function(done){
@@ -34,9 +34,6 @@ describe('Test get output of a Pipeline', function(){
     });
 
     it('Should get output stream', function(done){
-        this.timeout(3600000);
-        setTimeout(done, 3600000);
-
         var start = "123456";
         var streamCount = 0;                //update counter for test case only
         return falkonry.streamOutput(pipeline, start, function (error, notifier) {
@@ -46,14 +43,15 @@ describe('Test get output of a Pipeline', function(){
                 updateNotifier = notifier;
                 updateNotifier.on('data', function (data) {
                     console.log(data);
-                    streamCount += 1;       //streamCount ends streaming after retrieving five updates
-                    if(streamCount == 5) {
-                        return updateNotifier.close();
+                    streamCount++;
+                    if(streamCount === 5) { //stop stream after 5 messages
+                        updateNotifier.close();
+                        return done();
                     }
                 });
                 updateNotifier.on('error', function (error) {
                     updateNotifier.close();
-                    return done;
+                    return done();
                 })
             }
         });

@@ -13,8 +13,8 @@
 var fs       = require('fs');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
-var host     = 'http://localhost:8080';
-var token    = '';                      //auth token
+var host     = '';
+var token    = ''; //auth token
 var pipeline = ''; //Pipeline id
 
 /*
@@ -22,7 +22,7 @@ var pipeline = ''; //Pipeline id
  * and pipe it to a writable file stream
  */
 
-describe('Test get output of a Pipeline', function(){
+describe.skip('Test get output of a Pipeline', function(){
   var falkonry = null;
 
   before(function(done){
@@ -42,9 +42,6 @@ describe('Test get output of a Pipeline', function(){
   });
 
   it('Should get output within the specified range', function(done){
-    this.timeout(10000);
-    setTimeout(done, 10000);
-
     var start = 0;
     //var end   = 0;
     return falkonry.getOutput(pipeline, start, null, function(error, response){

@@ -57,12 +57,10 @@ var Schemas    = require('falkonry-js-client').Schemas;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
 eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
-eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
-eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
 eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
 
 //create Eventbuffer
@@ -104,7 +102,7 @@ var Schemas    = require('falkonry-js-client').Schemas;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
 eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
@@ -149,7 +147,7 @@ var Schemas    = require('falkonry-js-client').Schemas;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token'); 
 
 var eventbuffer = new Schemas.Eventbuffer();    
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
 
@@ -187,10 +185,10 @@ var Schemas    = require('falkonry-js-client').Schemas;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token'); 
 
 var eventbuffer = new Schemas.Eventbuffer();    
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
-eventbuffer.setThingIdentifier("motor");        //set property to identify thing in the data
+eventbuffer.setThingIdentifier("thing");        //set property to identify thing in the data
 
 //create Eventbuffer
 falkonry.createEventbuffer(eventbuffer, function(error, response){});
@@ -225,15 +223,15 @@ var Schemas    = require('falkonry-js-client').Schemas;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 
 var eventbuffer = new Schemas.Eventbuffer();
-eventbuffer.setName('Test-Eeventbuffer-01');    //name of the eventbuffer
+eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
-eventbuffer.setThingIdentifier("motor");        //set property to identify thing in the data
+eventbuffer.setThingIdentifier("thing");        //set property to identify thing in the data
 
 return falkonry.createEventbuffer(eventbuffer, function(error, response){
 
     //adding Data to the Eventbuffer
-    var data = "time, motor, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
+    var data = "time, thing, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
     var eventbuffer_id = response.getId();
     return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
         
