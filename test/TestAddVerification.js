@@ -17,7 +17,7 @@ var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
 var token    = '';                      //auth token
 
-describe("Test add verification data to Pipeline", function(){
+describe.skip("Test add verification data to Pipeline", function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];

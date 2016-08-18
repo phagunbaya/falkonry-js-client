@@ -21,7 +21,7 @@ var token    = '';                     //auth token
  * Test to get Pipelines for an account
  */
 
-describe('Test fetch Pipelines', function(){
+describe.skip('Test fetch Pipelines', function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];

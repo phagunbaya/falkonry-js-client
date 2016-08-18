@@ -20,7 +20,7 @@ var token    = '';                      //auth token
  * Test to add data to a Eventbuffer
  */
 
-describe('Test add input data to Eventbuffer', function(){
+describe.skip('Test add input data to Eventbuffer', function(){
   var falkonry = null;
   var eventbuffers = [];
 

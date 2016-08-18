@@ -24,7 +24,7 @@ var token    = '';                      //auth token
  *  3. Webhook
  */
 
-describe('Test Publication Creation', function(){
+describe.skip('Test Publication Creation', function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];

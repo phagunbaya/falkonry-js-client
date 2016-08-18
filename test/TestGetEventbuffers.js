@@ -21,7 +21,7 @@ var token    = '';                        //auth token
  * Test to get Eventbuffers for an account
  */
 
-describe('Test fetch Eventbuffers', function(){
+describe.skip('Test fetch Eventbuffers', function(){
   var falkonry = null;
   var eventbuffers = [];
 
