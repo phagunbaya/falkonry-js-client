@@ -18,7 +18,7 @@ var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
 var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0';
 
-describe.skip("Test add verification data from stream to Pipeline", function(){
+describe.skip("Test add facts data from stream to Pipeline", function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
@@ -28,7 +28,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
 		return done();
 	});
 
-	it("should add verification csv data", function(done){
+	it("should add facts csv data", function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
@@ -64,11 +64,11 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
               if(!error){
                 pipelines.push(response);
 
-                var data = fs.createReadStream(__dirname+'/resources/verificationData.csv');
-            return falkonry.addVerificationFromStream(response.getId(), 'csv', data, null, function(error,response){
-                  assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
+                var data = fs.createReadStream(__dirname+'/resources/factsData.csv');
+            return falkonry.addFactsFromStream(response.getId(), 'csv', data, null, function(error,response){
+                  assert.equal(error, null, "Error adding facts data to pipeline." + JSON.stringify(error));
                   if(!error) {
-                    assert.equal(JSON.stringify(response),'{"message":"Data submitted successfully"}',"Error adding verification");
+                    assert.equal(JSON.stringify(response),'{"message":"Data submitted successfully"}',"Error adding facts");
                   }
                   return done();
                 });
@@ -85,7 +85,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
     })
   });
 
-  it("should add verification json data", function(done){
+  it("should add facts json data", function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
@@ -121,11 +121,11 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
               if(!error){
                 pipelines.push(response);
 
-                var data = fs.createReadStream(__dirname+'/resources/verificationData.json');
-            return falkonry.addVerificationFromStream(response.getId(), 'json', data, null, function(error,response){
-                  assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
+                var data = fs.createReadStream(__dirname+'/resources/factsData.json');
+            return falkonry.addFactsFromStream(response.getId(), 'json', data, null, function(error,response){
+                  assert.equal(error, null, "Error adding facts data to pipeline." + JSON.stringify(error));
                   if(!error) {
-                    assert.equal(response.length,2,"Error adding verification");
+                    assert.equal(response.length,2,"Error adding facts");
                   }
                   return done();
                 });
@@ -149,7 +149,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
         return function(_cb) {
           return falkonry.deletePipeline(pipeline.getId(), function(error, response){
             if(error)
-                console.log('TestAddVerificationStream', 'Error deleting pipeline - '+pipeline.getId());
+                console.log('TestAddFactsStream', 'Error deleting pipeline - '+pipeline.getId());
             return _cb(null, null);
           });
         }
@@ -165,7 +165,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
           return function(_cb) {
             return falkonry.deleteEventbuffer(eventbuffer.getId(), function(error, response){
               if(error)
-                console.log('TestAddVerificationStream', 'Error deleting eventbuffer - '+eventbuffer.getId());
+                console.log('TestAddFactsStream', 'Error deleting eventbuffer - '+eventbuffer.getId());
               return _cb(null, null);
             });
           }

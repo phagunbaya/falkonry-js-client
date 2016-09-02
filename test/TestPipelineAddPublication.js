@@ -60,7 +60,6 @@ describe.skip('Test Publication Creation', function(){
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
-            .setThingName('Motor')
             .setAssessment(assessment)
             .setInterval(null,"PT1S");
 
@@ -131,7 +130,6 @@ describe.skip('Test Publication Creation', function(){
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
-            .setThingName('Motor')
             .setAssessment(assessment)
             .setInterval(null,"PT1S");
 

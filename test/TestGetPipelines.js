@@ -59,7 +59,6 @@ describe.skip('Test fetch Pipelines', function(){
         pipeline.setName('Pipeline-'+Math.random())
             .setEventbuffer(response.getId())
             .setInputSignals(signals)
-            .setThingName('Motor')
             .setAssessment(assessment)
             .setInterval(null,"PT1S");
 

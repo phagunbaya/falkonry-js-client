@@ -24,7 +24,7 @@ $ npm install falkonry-js-client
     
 ## Quick Start
 
-    * To create Eventbuffer for a single thing
+    * To create Eventbuffer for a single entity
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -39,7 +39,7 @@ eventbuffer.setTimeFormat("iso_8601");
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
 
-    * To create Eventbuffer for Multiple Things
+    * To create Eventbuffer for Multiple Entities
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -50,7 +50,7 @@ var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eeventbuffer-01');
 eventbuffer.setTimeIdentifier("time");
 eventbuffer.setTimeFormat("iso_8601");
-eventbuffer.setThingIdentifier("motor");
+eventbuffer.setEntityIdentifier("motor");
 
 return falkonry.createEventbuffer(eventbuffer, function(error, response){});
 ```
@@ -94,7 +94,7 @@ var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eeventbuffer-01');
 eventbuffer.setTimeIdentifier("time");
 eventbuffer.setTimeFormat("iso_8601");
-eventbuffer.setThingIdentifier("motor");
+eventbuffer.setEntityIdentifier("motor");
 
 return falkonry.createEventbuffer(eventbuffer, function(error, response){
     var data = "time, motor, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
@@ -158,17 +158,17 @@ var options = null
 var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, options, function(error, response){});
 ```
 
-    * To add json verification data to Pipeline
+    * To add json facts data to Pipeline
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 var data = '{"time" : "2011-03-26T12:00:00Z", "car" : "HI3821", "end" : "2012-06-01T00:00:00Z", "Health" : "Normal"}';
 var options = null
-return falkonry.addVerification('pipelineId', 'json', data, options, function(error, response){});
+return falkonry.addFacts('pipelineId', 'json', data, options, function(error, response){});
 ```
 
-    * To add csv verification data to Pipeline
+    * To add csv facts data to Pipeline
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -178,14 +178,14 @@ var options = null
 return falkonry.addInput('pipelineId', 'csv', data, options, function(error, response){});
 ```
 
-    * To add verification data from a stream to Pipeline
+    * To add facts data from a stream to Pipeline
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
 var stream   = fs.createReadStream('/tmp/sample.json');
 var options = null
-var streamHandler = falkonry.addVerificationFromStream('pipelineid', 'json', stream, options, function(error, response){});
+var streamHandler = falkonry.addFactsFromStream('pipelineid', 'json', stream, options, function(error, response){});
 ```
 
     * To get output of a Pipeline
