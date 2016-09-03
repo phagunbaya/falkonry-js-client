@@ -15,7 +15,7 @@ var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
-var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0';
+var token    = '';                      //auth token
 
 describe.skip("Test add facts data to Pipeline", function(){
   var falkonry = null;
@@ -28,6 +28,9 @@ describe.skip("Test add facts data to Pipeline", function(){
 	});
 
   it("should add facts csv data", function(done){
+    this.timeout(4000);
+    setTimeout(done, 4000);
+
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");

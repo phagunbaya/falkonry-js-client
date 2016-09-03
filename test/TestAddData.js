@@ -15,8 +15,7 @@ var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
-var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0'; //auth token
-
+var token    = '';                      //auth token
 /*
  * Test to add data to a Eventbuffer
  */

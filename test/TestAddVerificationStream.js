@@ -16,7 +16,7 @@ var assert   = require('assert');
 var Falkonry = require('../').Client;
 var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
-var token    = '6f3cfikppxhwe6w54f2vw3au0i3euii0';
+var token    = '';                      //auth token
 
 describe.skip("Test add facts data from stream to Pipeline", function(){
   var falkonry = null;
