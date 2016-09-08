@@ -40,6 +40,7 @@ describe.skip('Test Eventbuffer Creation', function(){
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
     eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    eventbuffer.setTimezone("GMT", 0);
     return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
       if(!error) {
@@ -52,6 +53,8 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(response.getSubscriptions()[0]["raw"]["type"], "WEBHOOK", 'Invalid Eventbuffer object after creation');
         assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
         assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
+        assert.equal(response.getTimezone().zone, "GMT", 'Invalid Timezone object after creation');
+        assert.equal(response.getTimezone().offset, 0, 'Invalid Timezone object after creation');
       }
       return done();
     });

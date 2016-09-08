@@ -60,6 +60,7 @@ var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setTimezone("GMT", 0);              //output data will be generated using timezone
 eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
 eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
 
