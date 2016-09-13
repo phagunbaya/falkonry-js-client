@@ -35,11 +35,12 @@ describe.skip('Test Eventbuffer Creation', function(){
     return done();
   });
 
-  it('Should create Eventbuffer with singleThing', function(done){
+  it('Should create Eventbuffer with singleEntity', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
     eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
+    eventbuffer.setTimezone("GMT", 0);
     return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
       if(!error) {
@@ -52,18 +53,20 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(response.getSubscriptions()[0]["raw"]["type"], "WEBHOOK", 'Invalid Eventbuffer object after creation');
         assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
         assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');
+        assert.equal(response.getTimezone().zone, "GMT", 'Invalid Timezone object after creation');
+        assert.equal(response.getTimezone().offset, 0, 'Invalid Timezone object after creation');
       }
       return done();
     });
   });
 
-  it('Should create Eventbuffer with multiple things', function(done){
+  it('Should create Eventbuffer with multiple entities', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
     eventbuffer.setTimeIdentifier("time");
     eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
-    eventbuffer.setThingIdentifier("thing");
+    eventbuffer.setThingIdentifier("entity");
 
     return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
@@ -74,7 +77,7 @@ describe.skip('Test Eventbuffer Creation', function(){
         assert.equal(response.getName(), eventbuffer.getName(), 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSchemaList().length, 1, 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSubscriptions().length, 1, 'Invalid Eventbuffer object after creation');
-        assert.equal(response.getThingIdentifier(), "thing", 'Invalid Eventbuffer object after creation');
+        assert.equal(response.getEntityIdentifier(), "entity", 'Invalid Eventbuffer object after creation');
         assert.equal(response.getSubscriptions()[0]["raw"]["type"], "WEBHOOK", 'Invalid Eventbuffer object after creation');
         assert.equal(response.getTimeIdentifier(), "time", 'Invalid Subscription object after creation');
         assert.equal(response.getTimeFormat(), "YYYY-MM-DD HH:mm:ss", 'Invalid Subscription object after creation');

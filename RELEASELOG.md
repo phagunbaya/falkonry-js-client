@@ -5,7 +5,7 @@
 
 ### 0.2.1
 * Support to add eventType for signal
-* Support to add verification data
+* Support to add facts data
 
 ### 0.2.0
 * Create Eventbuffer

@@ -24,7 +24,7 @@ describe('Test entity model validation', function(){
     return done();
   });
 
-  it('Should create Pipeline model for single thing with defaults', function(done){
+  it('Should create Pipeline model for single entity with defaults', function(done){
     var pipeline = new Schemas.Pipeline();
     var signals  = {
       'current'   : 'Numeric',
@@ -48,7 +48,7 @@ describe('Test entity model validation', function(){
     return done();
   });
 
-  it('Should create Pipeline model for multiple thing', function(done){
+  it('Should create Pipeline model for multiple entity', function(done){
     var pipeline = new Schemas.Pipeline();
     var signals  = {
       'current'   : 'Numeric',

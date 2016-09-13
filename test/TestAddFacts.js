@@ -10,7 +10,6 @@
  * Module dependencies
  */
 
-var fs       = require('fs');
 var async    = require('async');
 var assert   = require('assert');
 var Falkonry = require('../').Client;
@@ -18,7 +17,7 @@ var Schemas  = require('../').Schemas;
 var host     = 'http://localhost:8080';
 var token    = '';                      //auth token
 
-describe.skip("Test add verification data from stream to Pipeline", function(){
+describe.skip("Test add facts data to Pipeline", function(){
   var falkonry = null;
   var eventbuffers = [];
   var pipelines = [];
@@ -28,7 +27,10 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
 		return done();
 	});
 
-	it("should add verification csv data", function(done){
+  it("should add facts csv data", function(done){
+    this.timeout(4000);
+    setTimeout(done, 4000);
+
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
@@ -64,11 +66,11 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
               if(!error){
                 pipelines.push(response);
 
-                var data = fs.createReadStream(__dirname+'/resources/verificationData.csv');
-            return falkonry.addVerificationFromStream(response.getId(), 'csv', data, null, function(error,response){
-                  assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
+                var data = "time,end,car,Health\n2011-03-31T00:00:00Z,2011-04-01T00:00:00Z,IL9753,Normal\n2011-03-31T00:00:00Z,2011-04-01T00:00:00Z,HI3821,Normal";
+                return falkonry.addFacts(response.getId(), 'json', data, null, function(error,response){
+                  assert.equal(error, null, "Error adding facts data to pipeline." + JSON.stringify(error));
                   if(!error) {
-                    assert.equal(JSON.stringify(response),'{"message":"Data submitted successfully"}',"Error adding verification");
+                    assert.equal(JSON.stringify(response),'{"message":"Data submitted successfully"}',"Error adding facts");
                   }
                   return done();
                 });
@@ -85,7 +87,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
     })
   });
 
-  it("should add verification json data", function(done){
+  it("should add facts json data", function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
     eventbuffer.setTimeIdentifier("time");
@@ -121,11 +123,11 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
               if(!error){
                 pipelines.push(response);
 
-                var data = fs.createReadStream(__dirname+'/resources/verificationData.json');
-            return falkonry.addVerificationFromStream(response.getId(), 'json', data, null, function(error,response){
-                  assert.equal(error, null, "Error adding verification data to pipeline." + JSON.stringify(error));
+                var data = '{"time" : "2011-03-26T12:00:00Z", "car" : "HI3821", "end" : "2012-06-01T00:00:00Z", "Health" : "Normal"}';
+                return falkonry.addFacts(response.getId(), 'json', data, null, function(error,response){
+                  assert.equal(error, null, "Error adding facts data to pipeline." + JSON.stringify(error));
                   if(!error) {
-                    assert.equal(response.length,2,"Error adding verification");
+                    assert.equal(response.length,1,"Error adding facts");
                   }
                   return done();
                 });
@@ -140,7 +142,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
       }
       return done();
     })
-  });  
+  });
 
   after(function(done){
     return async.series(function(){
@@ -149,7 +151,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
         return function(_cb) {
           return falkonry.deletePipeline(pipeline.getId(), function(error, response){
             if(error)
-                console.log('TestAddVerificationStream', 'Error deleting pipeline - '+pipeline.getId());
+                console.log('TestAddFacts', 'Error deleting pipeline - '+pipeline.getId());
             return _cb(null, null);
           });
         }
@@ -165,7 +167,7 @@ describe.skip("Test add verification data from stream to Pipeline", function(){
           return function(_cb) {
             return falkonry.deleteEventbuffer(eventbuffer.getId(), function(error, response){
               if(error)
-                console.log('TestAddVerificationStream', 'Error deleting eventbuffer - '+eventbuffer.getId());
+                console.log('TestAddFacts', 'Error deleting eventbuffer - '+eventbuffer.getId());
               return _cb(null, null);
             });
           }

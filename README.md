@@ -32,7 +32,7 @@ $ npm install falkonry-js-client
 
 ## Examples 
 
-#### Setup Eventbuffer for narrow/historian style data from a single thing
+#### Setup Eventbuffer for narrow/historian style data from a single entity
 
 Data:
 ```
@@ -60,6 +60,7 @@ var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
+eventbuffer.setTimezone("GMT", 0);              //output data will be generated using timezone
 eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
 eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
 
@@ -73,7 +74,7 @@ var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
 
-#### Setup Eventbuffer for narrow/historian style data from multiple things
+#### Setup Eventbuffer for narrow/historian style data from multiple entities
 
 Data:
 
@@ -106,7 +107,7 @@ eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
 eventbuffer.setSignalsTagField("tag");          //property that identifies signal tag in the data
-eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat thing id and signal name to create signal tag
+eventbuffer.setSignalsDelimiter("_");           //delimiter used to concat entity id and signal name to create signal tag
 eventbuffer.setSignalsLocation("prefix");       //part of the tag that identifies the signal name
 eventbuffer.setValueColumn("value");            //property that identifies value of the signal in the data
 
@@ -122,7 +123,7 @@ var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});        
 ```
 
-#### Setup Eventbuffer for wide style data from a single thing
+#### Setup Eventbuffer for wide style data from a single entity
 
 Data :
 
@@ -160,17 +161,17 @@ var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```
 
-#### Setup Eventbuffer for wide style data from multiple things
+#### Setup Eventbuffer for wide style data from multiple entities
 
 Data :
 
 ```
-    {"time":1467729675422, "thing": "Thing1", "signal1":41.11, "signal2":82.34, "signal3":74.63, "signal4":4.8}
-    {"time":1467729668919, "thing": "Thing2", "signal1":78.11, "signal2":2.33, "signal3":4.6, "signal4":9.8}
+    {"time":1467729675422, "entity": "Thing1", "signal1":41.11, "signal2":82.34, "signal3":74.63, "signal4":4.8}
+    {"time":1467729668919, "entity": "Thing2", "signal1":78.11, "signal2":2.33, "signal3":4.6, "signal4":9.8}
 
     or
 
-    time, thing, signal1, signal2, signal3, signal4
+    time, entity, signal1, signal2, signal3, signal4
     1467729675422, thing1, 41.11, 62.34, 77.63, 4.8
     1467729675445, thing1, 43.91, 82.64, 73.63, 3.8
 ```
@@ -188,13 +189,13 @@ var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
-eventbuffer.setThingIdentifier("thing");        //set property to identify thing in the data
+eventbuffer.setEntityIdentifier("entity");        //set property to identify entity in the data
 
 //create Eventbuffer
 falkonry.createEventbuffer(eventbuffer, function(error, response){});
 
 //add data to Eventbuffer
-String data = "time, thing, signal1, signal2, signal3, signal4" + "\n"
+String data = "time, entity, signal1, signal2, signal3, signal4" + "\n"
         + "1467729675422, thing1, 41.11, 62.34, 77.63, 4.8" + "\n"
         + "1467729675445, thing1, 43.91, 82.64, 73.63, 3.8";
 var options = null
@@ -226,12 +227,12 @@ var eventbuffer = new Schemas.Eventbuffer();
 eventbuffer.setName('Test-Eventbuffer-01');     //name of the eventbuffer
 eventbuffer.setTimeIdentifier("time");          //property that identifies time in the data
 eventbuffer.setTimeFormat("iso_8601");          //format of the time in the data
-eventbuffer.setThingIdentifier("thing");        //set property to identify thing in the data
+eventbuffer.setEntityIdentifier("entity");        //set property to identify entity in the data
 
 return falkonry.createEventbuffer(eventbuffer, function(error, response){
 
     //adding Data to the Eventbuffer
-    var data = "time, thing, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
+    var data = "time, entity, current, vibration, state\n" + "2016-03-01 01:01:01, Motor1, 12.4, 3.4, On";
     var eventbuffer_id = response.getId();
     return falkonry.addInput(eventbuffer_id,'csv',data,null,function(error,response){
         
@@ -264,17 +265,17 @@ var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 falkonry.getPipelines(function(error, pipelines){});
 ```
 
-#### Add verification data (json format) to a Pipeline
+#### Add facts data (json format) to a Pipeline
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
 var falkonry   = new Falkonry('https://service.falkonry.io', 'auth-token');
 var data = '{"time" : "2011-03-26T12:00:00Z", "car" : "HI3821", "end" : "2012-06-01T00:00:00Z", "Health" : "Normal"}';
 var options = null
-return falkonry.addVerification('pipelineId', 'json', data, options, function(error, response){});
+return falkonry.addFacts('pipelineId', 'json', data, options, function(error, response){});
 ```
 
-#### Add verification data (csv format) to a Pipeline
+#### Add facts data (csv format) to a Pipeline
     
 ```js
 var Falkonry   = require('falkonry-js-client').Client;
@@ -287,7 +288,7 @@ var options = null
 return falkonry.addInput('pipelineId', 'csv', data, options, function(error, response){});
 ```
 
-#### Add verification data (json format) from a stream to a Pipeline
+#### Add facts data (json format) from a stream to a Pipeline
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;
@@ -297,7 +298,7 @@ var options = null
 var streamHandler = falkonry.addInputFromStream('eventbuffer_id', 'json', stream, options, function(error, response){});
 ```
 
-#### Add verification data (csv format) from a stream to a Pipeline
+#### Add facts data (csv format) from a stream to a Pipeline
     
 ```js
 var Falkonry = require('falkonry-js-client').Client;

@@ -19,8 +19,8 @@ var token    = '';                      //auth token
 
 /*
  * Test to create Pipeline for following cases :
- *  1. Single thing dataset
- *  2. Multiple thing dataset
+ *  1. Single entity dataset
+ *  2. Multiple entity dataset
  *  3. Pipeline with multiple assessment
  */
 
@@ -34,7 +34,7 @@ describe.skip('Test Pipeline Creation', function(){
     return done();
   });
 
-  it('Should create Pipeline for single thing', function(done){
+  it('Should create Pipeline for single entity', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -89,7 +89,7 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it('Should create Pipeline for single thing with eventType', function(done){
+  it('Should create Pipeline for single entity with eventType', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
@@ -144,13 +144,13 @@ describe.skip('Test Pipeline Creation', function(){
     });
   });
 
-  it('Should create Pipeline for multiple thing', function(done){
+  it('Should create Pipeline for multiple entity', function(done){
     var eventbuffer = new Schemas.Eventbuffer();
     eventbuffer.setName('Test-EB-'+Math.random());
 
     eventbuffer.setTimeIdentifier("time");
     eventbuffer.setTimeFormat("iso_8601");
-    eventbuffer.setThingIdentifier("motor");
+    eventbuffer.setEntityIdentifier("motor");
 
     return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
@@ -186,7 +186,7 @@ describe.skip('Test Pipeline Creation', function(){
                 assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
                 assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
                 assert.equal(response.getAssessments().length, 1, 'Invalid Pipeline object after creation');
-                assert.equal(response.getThingIdentifier(), eventbuffer.getThingIdentifier(), 'Invalid Pipeline object after creation');
+                assert.equal(response.getEntityIdentifier(), eventbuffer.getEntityIdentifier(), 'Invalid Pipeline object after creation');
               }
               return done();
             });
@@ -205,7 +205,7 @@ describe.skip('Test Pipeline Creation', function(){
 
     eventbuffer.setTimeIdentifier("time");
     eventbuffer.setTimeFormat("iso_8601");
-    eventbuffer.setThingIdentifier("motor");
+    eventbuffer.setEntityIdentifier("motor");
 
     return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer' + JSON.stringify(error));
@@ -246,7 +246,7 @@ describe.skip('Test Pipeline Creation', function(){
                 assert.equal(response.getEventbuffer(), pipeline.getEventbuffer(), 'Invalid Pipeline object after creation');
                 assert.equal(response.getInputSignals().length, 3, 'Invalid Pipeline object after creation');
                 assert.equal(response.getAssessments().length, 2, 'Invalid Pipeline object after creation');
-                assert.equal(response.getThingIdentifier(), eventbuffer.getThingIdentifier(), 'Invalid Pipeline object after creation');
+                assert.equal(response.getEntityIdentifier(), eventbuffer.getEntityIdentifier(), 'Invalid Pipeline object after creation');
               }
               return done();
             });
