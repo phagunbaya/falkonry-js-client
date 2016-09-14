@@ -79,18 +79,18 @@ return falkonry.addInput('eventbufferId', 'json', data, options, function(error,
 Data:
 
 ```
-    {"time" :"2016-03-01 01:01:01", "tag" : "signal1_thing1", "value" : 3.4}
-    {"time" :"2016-03-01 01:01:01", "tag" : "signal2_thing1", "value" : 1.4}
-    {"time" :"2016-03-01 01:01:02", "tag" : "signal1_thing2", "value" : 9.3}
-    {"time" :"2016-03-01 01:01:02", "tag" : "signal2_thing2", "value" : 4.3}
+    {"time" :"2016-03-01 01:01:01", "tag" : "signal1_entity1", "value" : 3.4}
+    {"time" :"2016-03-01 01:01:01", "tag" : "signal2_entity1", "value" : 1.4}
+    {"time" :"2016-03-01 01:01:02", "tag" : "signal1_entity2", "value" : 9.3}
+    {"time" :"2016-03-01 01:01:02", "tag" : "signal2_entity2", "value" : 4.3}
 
     or
 
     time, tag, value
-    2016-03-01 01:01:01, signal1_thing1, 3.4
-    2016-03-01 01:01:01, signal2_thing1, 1.4
-    2016-03-01 01:01:02, signal1_thing2, 9.3
-    2016-03-01 01:01:02, signal2_thing2, 4.3
+    2016-03-01 01:01:01, signal1_entity1, 3.4
+    2016-03-01 01:01:01, signal2_entity1, 1.4
+    2016-03-01 01:01:02, signal1_entity2, 9.3
+    2016-03-01 01:01:02, signal2_entity2, 4.3
 ```
 
 Usage:
@@ -115,10 +115,10 @@ eventbuffer.setValueColumn("value");            //property that identifies value
 falkonry.createEventbuffer(eventbuffer, function(error, response){});
 
 //add data to Eventbuffer
-String data = "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal1_thing1\", \"value\" : 3.4}" + "\n"
-        + "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal2_thing1\", \"value\" : 1.4}" + "\n"
-        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal1_thing1\", \"value\" : 9.3}" + "\n"
-        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal2_thing2\", \"value\" : 4.3}";
+String data = "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal1_entity1\", \"value\" : 3.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:01\", \"tag\" : \"signal2_entity1\", \"value\" : 1.4}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal1_entity1\", \"value\" : 9.3}" + "\n"
+        + "{\"time\" : \"2016-03-01 01:01:02\", \"tag\" : \"signal2_entity2\", \"value\" : 4.3}";
 var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});        
 ```
@@ -166,14 +166,14 @@ return falkonry.addInput('eventbufferId', 'json', data, options, function(error,
 Data :
 
 ```
-    {"time":1467729675422, "entity": "Thing1", "signal1":41.11, "signal2":82.34, "signal3":74.63, "signal4":4.8}
-    {"time":1467729668919, "entity": "Thing2", "signal1":78.11, "signal2":2.33, "signal3":4.6, "signal4":9.8}
+    {"time":1467729675422, "entity": "entity1", "signal1":41.11, "signal2":82.34, "signal3":74.63, "signal4":4.8}
+    {"time":1467729668919, "entity": "entity2", "signal1":78.11, "signal2":2.33, "signal3":4.6, "signal4":9.8}
 
     or
 
     time, entity, signal1, signal2, signal3, signal4
-    1467729675422, thing1, 41.11, 62.34, 77.63, 4.8
-    1467729675445, thing1, 43.91, 82.64, 73.63, 3.8
+    1467729675422, entity1, 41.11, 62.34, 77.63, 4.8
+    1467729675445, entity1, 43.91, 82.64, 73.63, 3.8
 ```
 
 Usage:
@@ -196,8 +196,8 @@ falkonry.createEventbuffer(eventbuffer, function(error, response){});
 
 //add data to Eventbuffer
 String data = "time, entity, signal1, signal2, signal3, signal4" + "\n"
-        + "1467729675422, thing1, 41.11, 62.34, 77.63, 4.8" + "\n"
-        + "1467729675445, thing1, 43.91, 82.64, 73.63, 3.8";
+        + "1467729675422, entity1, 41.11, 62.34, 77.63, 4.8" + "\n"
+        + "1467729675445, entity1, 43.91, 82.64, 73.63, 3.8";
 var options = null
 return falkonry.addInput('eventbufferId', 'json', data, options, function(error, response){});
 ```

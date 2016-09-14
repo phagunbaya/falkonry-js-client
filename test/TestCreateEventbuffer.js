@@ -66,7 +66,7 @@ describe.skip('Test Eventbuffer Creation', function(){
 
     eventbuffer.setTimeIdentifier("time");
     eventbuffer.setTimeFormat("YYYY-MM-DD HH:mm:ss");
-    eventbuffer.setThingIdentifier("entity");
+    eventbuffer.setEntityIdentifier("entity");
 
     return falkonry.createEventbuffer(eventbuffer, function(error, response){
       assert.equal(error, null, 'Error creating Eventbuffer');
