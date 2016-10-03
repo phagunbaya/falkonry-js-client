@@ -1,5 +1,8 @@
 # Release Log
 
+### 0.2.4
+* Minor API changes. Refer to release note - https://github.com/Falkonry/falkonry-js-client/releases/tag/0.2.4
+
 ### 0.2.3
 * Terminology changes. Refer to release note - https://github.com/Falkonry/falkonry-js-client/releases/tag/0.2.3
 
