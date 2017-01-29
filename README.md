@@ -315,12 +315,16 @@ var Falkonry = require('falkonry-js-client').Client;
 
 //instantiate Falkonry
 var falkonry = new Falkonry('https://service.falkonry.io', 'auth-token');
-var stream   = fs.createReadStream('/tmp/sample.json');
-var startTime = '1457018017';               //seconds since unix epoch 
-var endTime   = '1457028017';               //seconds since unix epoch
-var streamHandler = falkonry.getOutput('pipeline_id', startTime, endTime, function(error, stream){
-    stream.pipe(fs.createWriteStream('/tmp/pipeline_output.json'));
-});
+
+//get live output stream
+return falkonry.getOutput('pipeline-id', function(error, stream){
+    stream.on('data', function (data) {
+        //use data
+    });
+    stream.on('error', function (error) {
+        throw "Error streaming pipeline output"
+    });
+})
 ```
 
 #### To create and delete a subscription for an Eventbuffer
