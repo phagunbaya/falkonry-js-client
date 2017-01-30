@@ -34,12 +34,11 @@ describe('Test get output of a Pipeline', function(){
         var streamCount = 0;                //update counter for test case only
         return falkonry.getOutput(pipeline, function (error, stream) {
             assert.equal(error, null, 'Error getting output stream'  + error);
-
             if(!error) {
                 stream.on('data', function (data) {
                     console.log(data);
                     streamCount++;
-                    if(streamCount === 5) { //stop stream after 5 messages
+                    if(streamCount > 5) { //stop stream after 5 messages
                         stream.close();
                         return done();
                     }
