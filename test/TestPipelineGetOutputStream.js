@@ -22,7 +22,7 @@ var pipeline = '';                      //Pipeline id
  * and pipe it to a writable file stream
  */
 
-describe('Test get output of a Pipeline', function(){
+describe.skip('Test get output of a Pipeline', function(){
     var falkonry = null;
 
     before(function(done){
